@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Scene from "@/components/Scene";
 import Header from "@/components/Header";
 import FadeInText from "@/components/FadeInText";
@@ -20,8 +23,31 @@ export default function Home() {
     { name: "Linux", icon: "🐧" },
   ];
 
+  const [isRevealed, setIsRevealed] = useState(false);
+
+  useEffect(() => {
+    // Force page to start at top on reload so the 3D card entrance animation is always visible
+    if (typeof window !== 'undefined') {
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10 && !isRevealed) {
+        setIsRevealed(true);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isRevealed]);
+
   return (
-    <main className="relative bg-black overflow-x-hidden selection:bg-blue-500/30">
+    <main id="main-scroll-container" className="relative bg-black overflow-x-hidden selection:bg-blue-500/30">
       
       {/* Living Background Atmosphere */}
       <div className="fixed inset-0 z-0 pointer-events-none aurora-bg"></div>
@@ -29,16 +55,30 @@ export default function Home() {
       
       <Header />
       
+      {/* Landing Prompt */}
+      {!isRevealed && (
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce z-50 pointer-events-none opacity-80">
+          <span className="text-xs font-bold uppercase tracking-[0.3em] text-blue-400 mb-2">
+            Scroll to explore
+          </span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500">
+            <path d="M12 5v14M19 12l-7 7-7-7"/>
+          </svg>
+        </div>
+      )}
+
       {/* 3D Scene Background Fixed to screen */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <Scene />
+      <div id="scene-container" className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 w-full h-full pointer-events-none">
+          <Scene />
+        </div>
       </div>
 
       {/* Foreground Content */}
-      <div className="relative z-10 w-full pointer-events-none">
+      <div className={`relative z-10 w-full transition-opacity duration-1000 ${isRevealed ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
         
         {/* HERO SECTION */}
-        <section id="hero" className="flex min-h-[120vh] flex-col items-center justify-center px-4 text-center pointer-events-auto">
+        <section id="hero" className="flex min-h-[100vh] flex-col items-center justify-center px-4 text-center pointer-events-auto pt-[15vh]">
           <FadeInText className="flex flex-col items-center justify-center mt-32">
             
             <h1 className="text-6xl font-black tracking-tighter text-white md:text-9xl drop-shadow-2xl mt-16">
@@ -51,14 +91,6 @@ export default function Home() {
               <AnimatedButton href="#experience">
                 View My Work
               </AnimatedButton>
-            </div>
-            
-            {/* Scroll Indicator */}
-            <div className="absolute bottom-24 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce opacity-70">
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-400 mb-4">Scroll</span>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500">
-                <path d="M12 5v14M19 12l-7 7-7-7"/>
-              </svg>
             </div>
           </FadeInText>
         </section>

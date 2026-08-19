@@ -147,13 +147,19 @@ function SceneContent() {
   const scrollGroupRef = useRef<THREE.Group>(null);
   const pivotGroupRef = useRef<THREE.Group>(null);
   const idleSwayRef = useRef<gsap.core.Tween | null>(null);
+  const handleCardClickRef = useRef<(() => void) | null>(null);
   
   // GSAP scroll and entrance animations
   useEffect(() => {
     if (!scrollGroupRef.current || !pivotGroupRef.current) return;
 
-    // Wait a tick for layout
     const ctx = gsap.context(() => {
+      // Refresh ScrollTrigger after a short delay to ensure DOM layout is fully measured
+      // This is crucial in Next.js/R3F where canvas mounts independently of the HTML DOM
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 500);
+
       // 0. Set initial states
       gsap.set(scrollGroupRef.current!.rotation, { x: 0, y: 0, z: 0 });
       gsap.set(scrollGroupRef.current!.position, { x: 0, y: 0, z: 0 });
@@ -196,18 +202,15 @@ function SceneContent() {
         paused: true
       });
       
-      // 3. SCROLL ANIMATION
-      const scrollTl = gsap.timeline({
+      // 3. SCROLL ANIMATION (Scrubbing across the whole page)
+      const stTl = gsap.timeline({
         scrollTrigger: {
-          trigger: "#hero", // Starts animating as soon as we scroll from top
+          trigger: "#main-scroll-container",
           start: "top top",
-          end: "+=250%", 
+          end: "bottom bottom",
           scrub: true,
+          invalidateOnRefresh: true,
           onUpdate: (self) => {
-            if (scrollGroupRef.current) {
-              scrollGroupRef.current.visible = self.progress < 0.98;
-            }
-            
             // Cleanly pause the idle sway when scrolling down, resume when at the very top
             if (self.progress > 0.01) {
               if (idleSwayRef.current?.isActive()) {
@@ -223,11 +226,24 @@ function SceneContent() {
         }
       });
 
-      scrollTl.to(scrollGroupRef.current!.scale, { x: 0.35, y: 0.35, z: 0.35, duration: 1 }, 0)
-              .to(scrollGroupRef.current!.rotation, { x: -Math.PI / 8, z: Math.PI / 12, duration: 1 }, 0);
+      // Animate scale down to 0.25 and DOM opacity down to 0
+      stTl.to(scrollGroupRef.current!.scale, { x: 0.25, y: 0.25, z: 0.25 }, 0)
+          .to(scrollGroupRef.current!.rotation, { x: -Math.PI / 8, z: Math.PI / 12 }, 0)
+          .to("#scene-container", { opacity: 0 }, 0);
+
+      // 4. CLICK HANDLER
+      handleCardClickRef.current = () => {
+        // Smoothly scroll down past the blank spacer to the content
+        window.scrollTo({
+          top: window.innerHeight,
+          behavior: "smooth"
+        });
+      };
     });
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+    };
   }, []); // Empty dependency array removes React state re-renders entirely
 
   return (
@@ -244,7 +260,15 @@ function SceneContent() {
       
       <group ref={scrollGroupRef}>
         <group position={[0, 1.05, 0]} ref={pivotGroupRef}>
-          <group position={[0, -1.05, 0]}>
+          <group 
+            position={[0, -1.05, 0]} 
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCardClickRef.current?.();
+            }}
+            onPointerOver={() => document.body.style.cursor = 'pointer'}
+            onPointerOut={() => document.body.style.cursor = 'auto'}
+          >
             <Suspense fallback={null}>
               <IDCard />
             </Suspense>
