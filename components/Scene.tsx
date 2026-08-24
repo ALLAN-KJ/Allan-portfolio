@@ -173,148 +173,175 @@ function SceneContent() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // GSAP scroll and entrance animations
+  // GSAP animation: three-phase sequence
+  // Phase 1 — LANDING:    Card falls, swings, settles. Nothing else visible.
+  // Phase 2 — TRANSITION: First scroll/click → card disappears → reappears small → hero fades in.
+  // Phase 3 — SCROLL:     ScrollTrigger drives the small card 0.15 → 0 across the full page.
   useEffect(() => {
     if (!scrollGroupRef.current || !pivotGroupRef.current) return;
 
+    // State flags live outside ctx so the cleanup fn can also read them
+    let hasTriggered = false;
+    let enterTlComplete = false;
+    let removeFirstScrollListener: (() => void) | null = null;
+
     const ctx = gsap.context(() => {
-      // 0. Set initial states
+      const initialScale = window.innerWidth < 768 ? 0.75 : 1;
+      const sceneContainer = document.getElementById("scene-container");
+
+      // ── 0. Initial states ──────────────────────────────────────────────────
       gsap.set(scrollGroupRef.current!.rotation, { x: 0, y: 0, z: 0 });
       gsap.set(scrollGroupRef.current!.position, { x: 0, y: 0, z: 0 });
-      const initialScale = window.innerWidth < 768 ? 0.75 : 1;
       gsap.set(scrollGroupRef.current!.scale, { x: initialScale, y: initialScale, z: initialScale });
-
-      // Pivot starts high up for the drop, angled slightly for momentum
       gsap.set(pivotGroupRef.current!.position, { x: 0, y: 5, z: 0 });
       gsap.set(pivotGroupRef.current!.rotation, { x: 0, y: 0, z: Math.PI / 16 });
+      if (sceneContainer) gsap.set(sceneContainer, { opacity: 1 });
 
-      // 1. ENTRANCE ANIMATION (Fall + Pendulum)
+      // ── setupScrollTrigger ─────────────────────────────────────────────────
+      // Called only after the reappear animation finishes (card already at 0.15).
+      // GSAP's "to" captures the current scale (0.15) as the from-value, so the
+      // scrub drives it cleanly from 0.15 → 0 over the full page length.
+      const setupScrollTrigger = () => {
+        if (!scrollGroupRef.current) return;
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: "#main-scroll-container",
+            start: "top top",
+            end: "bottom bottom",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        // Card: 0.15 → 0 (scale captured from current state), with a gentle tilt
+        tl.to(scrollGroupRef.current!.scale, { x: 0, y: 0, z: 0, ease: "none" }, 0)
+          .to(scrollGroupRef.current!.rotation, { x: -Math.PI / 8, z: Math.PI / 12, ease: "none" }, 0);
+
+        // Scene container fades to 0 in sync with the card disappearing
+        if (sceneContainer) {
+          tl.to(sceneContainer, { opacity: 0, ease: "none" }, 0);
+        }
+      };
+
+      // ── triggerTransition ──────────────────────────────────────────────────
+      // Fires exactly once on first scroll (> 5 px) or card click.
+      const triggerTransition = () => {
+        if (hasTriggered) return;
+        hasTriggered = true;
+
+        removeFirstScrollListener?.(); // stop listening now
+
+        // Pause idle sway and snap pivot to neutral
+        idleSwayRef.current?.pause();
+        gsap.to(pivotGroupRef.current!.rotation, { z: 0, duration: 0.2, overwrite: "auto" });
+
+        // Hide scroll prompt immediately
+        const scrollPrompt = document.getElementById("scroll-prompt");
+        if (scrollPrompt) gsap.to(scrollPrompt, { opacity: 0, duration: 0.2, overwrite: true });
+
+        // Reveal hero HTML content (slight delay so card starts disappearing first)
+        const heroContent = document.getElementById("hero-content");
+        if (heroContent) {
+          heroContent.style.pointerEvents = "auto";
+          gsap.to(heroContent, { opacity: 1, y: 0, duration: 0.85, ease: "expo.out", delay: 0.2 });
+        }
+
+        // Phase 2a: Card shrinks to nothing (0.28 s) ─────────────────────────
+        gsap.to(scrollGroupRef.current!.scale, {
+          x: 0, y: 0, z: 0,
+          duration: 0.28, ease: "power2.in",
+          onComplete: () => {
+            // Reset rotation so the reappear is perfectly upright
+            gsap.set(pivotGroupRef.current!.rotation, { z: 0 });
+            gsap.set(scrollGroupRef.current!.rotation, { x: 0, y: 0, z: 0 });
+
+            // Phase 2b: Card pops back at small background scale (0.38 s) ────
+            gsap.to(scrollGroupRef.current!.scale, {
+              x: 0.15, y: 0.15, z: 0.15,
+              duration: 0.38, ease: "back.out(1.4)",
+              onComplete: setupScrollTrigger, // Phase 3 begins here
+            });
+          },
+        });
+      };
+
+      // ── 1. ENTRANCE ANIMATION (Fall + Pendulum) ────────────────────────────
       const enterTl = gsap.timeline({
         onComplete: () => {
-          // Card has settled. Now reveal the HTML hero content and scroll prompt.
-          // This ensures zero overlap: card is fully visible and settled
-          // before any HTML text appears over the same screen area.
-          const heroContent = document.getElementById("hero-content");
+          enterTlComplete = true;
+
+          // Show "Scroll to explore" prompt (only if still at page top)
           const scrollPrompt = document.getElementById("scroll-prompt");
-
-          if (heroContent) {
-            gsap.to(heroContent, {
-              opacity: 1,
-              y: 0,
-              duration: 0.9,
-              ease: "expo.out",
-              onStart: () => {
-                heroContent.style.pointerEvents = "auto";
-              }
-            });
-          }
-
           if (scrollPrompt && window.scrollY < 50) {
-            gsap.to(scrollPrompt, {
-              opacity: 0.8,
-              duration: 0.6,
-              ease: "power2.out",
-              delay: 0.3
-            });
+            gsap.to(scrollPrompt, { opacity: 0.8, duration: 0.6, ease: "power2.out" });
           }
 
-          // Start idle sway only if still at top of page
+          // Start idle sway
           if (window.scrollY < 50) {
             idleSwayRef.current?.play();
           }
-        }
+
+          // Edge case: user scrolled during the entrance animation
+          if (window.scrollY > 5) {
+            triggerTransition();
+          }
+        },
       });
 
       enterTl.to(pivotGroupRef.current!.position, {
-        y: 1.05, // Rest position of pivot (shifted up by 1.05 to rotate from top edge)
+        y: 1.05, // rest position of pivot
         duration: 0.7,
-        ease: "power2.in"
+        ease: "power2.in",
       });
 
       const swingDuration = 0.5;
-      enterTl.to(pivotGroupRef.current!.rotation, { z: -Math.PI / 12, duration: swingDuration, ease: "sine.inOut" })
-             .to(pivotGroupRef.current!.rotation, { z: Math.PI / 20, duration: swingDuration, ease: "sine.inOut" })
-             .to(pivotGroupRef.current!.rotation, { z: -Math.PI / 32, duration: swingDuration, ease: "sine.inOut" })
-             .to(pivotGroupRef.current!.rotation, { z: Math.PI / 64, duration: swingDuration, ease: "sine.inOut" })
-             .to(pivotGroupRef.current!.rotation, { z: 0, duration: swingDuration, ease: "sine.inOut" });
+      enterTl
+        .to(pivotGroupRef.current!.rotation, { z: -Math.PI / 12, duration: swingDuration, ease: "sine.inOut" })
+        .to(pivotGroupRef.current!.rotation, { z:  Math.PI / 20, duration: swingDuration, ease: "sine.inOut" })
+        .to(pivotGroupRef.current!.rotation, { z: -Math.PI / 32, duration: swingDuration, ease: "sine.inOut" })
+        .to(pivotGroupRef.current!.rotation, { z:  Math.PI / 64, duration: swingDuration, ease: "sine.inOut" })
+        .to(pivotGroupRef.current!.rotation, { z: 0,             duration: swingDuration, ease: "sine.inOut" });
 
-      // 2. IDLE SWAY LOOP
+      // ── 2. IDLE SWAY (paused until entrance completes) ────────────────────
       idleSwayRef.current = gsap.to(pivotGroupRef.current!.rotation, {
-        z: Math.PI / 90, // subtle 2 degree sway
+        z: Math.PI / 90,
         duration: 2.5,
         ease: "sine.inOut",
         yoyo: true,
         repeat: -1,
-        paused: true
+        paused: true,
       });
 
-      // 3. SCROLL ANIMATION (Scrubbing across the whole page)
-      // Both the 3D card's scale/tilt AND the scene container opacity are driven
-      // entirely by scroll position — fully reversible in both directions.
-      const sceneContainer = document.getElementById("scene-container");
-      if (sceneContainer) {
-        gsap.set(sceneContainer, { opacity: 1 });
-      }
-
-      const stTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: "#main-scroll-container",
-          start: "top top",
-          end: "bottom bottom",
-          scrub: true,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            const scrollPromptEl = document.getElementById("scroll-prompt");
-            if (self.progress > 0.01) {
-              // Scrolling down: pause idle sway and hide scroll prompt
-              if (idleSwayRef.current?.isActive()) {
-                idleSwayRef.current.pause();
-                gsap.to(pivotGroupRef.current!.rotation, { z: 0, duration: 0.5, ease: "power2.out", overwrite: "auto" });
-              }
-              if (scrollPromptEl) {
-                gsap.to(scrollPromptEl, { opacity: 0, duration: 0.3, overwrite: "auto" });
-              }
-            } else if (self.progress <= 0.01 && !enterTl.isActive()) {
-              // Back at top and entrance is done: resume idle sway and restore scroll prompt
-              if (idleSwayRef.current?.paused()) {
-                idleSwayRef.current.play();
-              }
-              if (scrollPromptEl) {
-                gsap.to(scrollPromptEl, { opacity: 0.8, duration: 0.4, overwrite: "auto" });
-              }
-            }
-          }
+      // ── 3. FIRST SCROLL LISTENER ──────────────────────────────────────────
+      // Waits for entrance to finish (enterTlComplete) before triggering.
+      const handleFirstScroll = () => {
+        if (window.scrollY > 5 && enterTlComplete) {
+          triggerTransition();
         }
-      });
+      };
+      window.addEventListener("scroll", handleFirstScroll, { passive: true });
+      removeFirstScrollListener = () => window.removeEventListener("scroll", handleFirstScroll);
 
-      // Animate the 3D card: scale down and tilt as user scrolls.
-      // Simultaneously fade the scene container so the card is fully invisible at page bottom.
-      // Both are scrub-linked — scrolling back up smoothly restores them.
-      stTl
-        // Card shrinks to near-zero over the full scroll range
-        .to(scrollGroupRef.current!.scale, { x: 0.05, y: 0.05, z: 0.05 }, 0)
-        .to(scrollGroupRef.current!.rotation, { x: -Math.PI / 8, z: Math.PI / 12 }, 0)
-        // Scene container fades: starts fading at 30% scroll, fully gone at 100%
-        .fromTo(
-          sceneContainer ?? {},
-          { opacity: 1 },
-          { opacity: 0, ease: "none" },
-          0.3
-        );
-
-      // 4. CLICK / TAP HANDLER — works for both mouse and touch
+      // ── 4. CLICK / TAP HANDLER ────────────────────────────────────────────
       handleCardClickRef.current = () => {
-        window.scrollTo({
-          top: window.innerHeight,
-          behavior: "smooth"
-        });
+        if (!enterTlComplete) return; // ignore clicks during entrance
+        triggerTransition();
+        // After a short delay (so the disappear animation starts), scroll slightly
+        // to kick off the scroll-linked Phase 3.
+        setTimeout(() => {
+          if (window.scrollY < 50) {
+            window.scrollTo({ top: 80, behavior: "smooth" });
+          }
+        }, 200);
       };
     });
 
     return () => {
+      removeFirstScrollListener?.();
       ctx.revert();
     };
-  }, []); // Empty dependency array removes React state re-renders entirely
+  }, []); // Empty dep array — avoids re-running on state changes
 
   // Touch tap handler for mobile — the R3F onClick fires on pointer events,
   // but we also attach a native touchend to the canvas parent for reliability
@@ -412,4 +439,3 @@ export default function Scene() {
     </div>
   );
 }
-
