@@ -14,21 +14,22 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
+      wheelMultiplier: 1,
       touchMultiplier: 2,
     });
 
     lenis.on("scroll", ScrollTrigger.update);
 
-    gsap.ticker.add((time) => {
+    // Store the raf reference so we can remove the EXACT same function on cleanup
+    const rafHandler = (time: number) => {
       lenis.raf(time * 1000);
-    });
+    };
 
+    gsap.ticker.add(rafHandler);
     gsap.ticker.lagSmoothing(0);
 
     return () => {
-      gsap.ticker.remove((time) => {
-        lenis.raf(time * 1000);
-      });
+      gsap.ticker.remove(rafHandler);
       lenis.destroy();
     };
   }, []);
