@@ -1,8 +1,7 @@
 "use client";
 
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame, useThree, invalidate } from "@react-three/fiber";
 import { OrbitControls, Environment, RoundedBox, Text, useTexture, MeshTransmissionMaterial } from "@react-three/drei";
-import { EffectComposer, Bloom, Vignette, ChromaticAberration } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { useRef, useEffect, useState, Suspense } from "react";
 import gsap from "gsap";
@@ -20,8 +19,8 @@ function IDCard({ isMobile = false }: { isMobile?: boolean }) {
       <RoundedBox args={[3.4, 2.1, 0.05]} radius={0.05} smoothness={4}>
         <MeshTransmissionMaterial
           backside
-          samples={isMobile ? 3 : 6}
-          resolution={isMobile ? 512 : 1024}
+          samples={isMobile ? 3 : 4}
+          resolution={isMobile ? 512 : 768}
           thickness={0.5}
           roughness={0.3}
           transmission={1.0}
@@ -55,7 +54,7 @@ function IDCard({ isMobile = false }: { isMobile?: boolean }) {
         <Text
           position={[-1.15, 0.75, 0]}
           fontSize={0.065}
-          color="#93c5fd"
+          color="#D9A15C"
           anchorX="left"
           anchorY="middle"
           font="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hjp-Ek-_EeA.woff"
@@ -93,7 +92,7 @@ function IDCard({ isMobile = false }: { isMobile?: boolean }) {
         <Text
           position={[-1.2, -0.4, 0]}
           fontSize={0.09}
-          color="#3b82f6"
+          color="#D9A15C"
           anchorX="left"
           anchorY="middle"
           maxWidth={2}
@@ -102,7 +101,7 @@ function IDCard({ isMobile = false }: { isMobile?: boolean }) {
           B.Tech Cybersecurity
         </Text>
 
-        {/* Photo Frame / Border (Over 1.0 color to trigger bloom) */}
+        {/* Photo Frame / Border */}
         <mesh position={[1.0, 0, -0.001]}>
           <planeGeometry args={[0.85, 1.05]} />
           <meshBasicMaterial color={[1.5, 1.5, 1.5] as any} toneMapped={false} />
@@ -114,30 +113,38 @@ function IDCard({ isMobile = false }: { isMobile?: boolean }) {
           <meshBasicMaterial map={photoTexture} toneMapped={false} />
         </mesh>
 
-        {/* Bottom Bar Accent (Glowing) */}
+        {/* Bottom Bar Accent */}
         <mesh position={[-0.2, -0.7, 0]}>
           <planeGeometry args={[2.0, 0.05]} />
-          <meshBasicMaterial color={[1.2, 1.2, 1.2] as any} toneMapped={false} />
+          <meshBasicMaterial color={[1.53, 1.134, 0.648] as any} toneMapped={false} />
         </mesh>
       </group>
 
       {/* Back Face Details */}
       <group position={[0, 0, -0.026]} rotation={[0, Math.PI, 0]}>
-        {/* Magnetic Stripe */}
-        <mesh position={[0, 0.6, 0]}>
-          <planeGeometry args={[3.4, 0.4]} />
-          <meshBasicMaterial color="#050505" />
+        {/* Solid Back Plane (FrontSide only so it's invisible from the front of the glass) */}
+        <mesh position={[0, 0, 0]}>
+          <planeGeometry args={[3.4, 2.1]} />
+          <meshStandardMaterial color="#0C0D12" roughness={0.9} side={THREE.FrontSide} />
         </mesh>
 
+        {/* Magnetic Stripe */}
+        <mesh position={[0, 0.6, 0.001]}>
+          <planeGeometry args={[3.4, 0.4]} />
+          <meshBasicMaterial color="#050505" side={THREE.FrontSide} />
+        </mesh>
+
+        {/* Register Number */}
         <Text
-          position={[0, -0.2, 0]}
+          position={[0, -0.2, 0.001]}
           fontSize={0.2}
-          color="#888888"
+          color="#D9A15C"
           anchorX="center"
           anchorY="middle"
           font="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hjp-Ek-_EeA.woff"
+          material-side={THREE.FrontSide}
         >
-          ID: URK25CS6018
+          URK25CS6018
         </Text>
       </group>
     </group>
@@ -145,9 +152,16 @@ function IDCard({ isMobile = false }: { isMobile?: boolean }) {
 }
 
 // Helper: fires once after the GL context is ready, then calls ScrollTrigger.refresh
+// Also invalidates the frame loop on every scroll event so scrub animations render
 function SceneReadyRefresher() {
   const { gl } = useThree();
   const refreshed = useRef(false);
+
+  useEffect(() => {
+    const onScroll = () => invalidate();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useFrame(() => {
     if (!refreshed.current && gl.domElement) {
@@ -162,8 +176,9 @@ function SceneReadyRefresher() {
 function SceneContent() {
   const scrollGroupRef = useRef<THREE.Group>(null);
   const pivotGroupRef = useRef<THREE.Group>(null);
+  const entryGroupRef = useRef<THREE.Group>(null);
   const idleSwayRef = useRef<gsap.core.Tween | null>(null);
-  const handleCardClickRef = useRef<(() => void) | null>(null);
+  const idleFloatRef = useRef<gsap.core.Tween | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -173,191 +188,128 @@ function SceneContent() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // GSAP animation: three-phase sequence
-  // Phase 1 — LANDING:    Card falls, swings, settles. Nothing else visible.
-  // Phase 2 — TRANSITION: First scroll/click → card disappears → reappears small → hero fades in.
-  // Phase 3 — SCROLL:     ScrollTrigger drives the small card 0.15 → 0 across the full page.
+  // GSAP animation: Scroll-driven persistent 3D object
   useEffect(() => {
-    if (!scrollGroupRef.current || !pivotGroupRef.current) return;
+    if (!scrollGroupRef.current || !pivotGroupRef.current || !entryGroupRef.current) return;
 
-    // State flags live outside ctx so the cleanup fn can also read them
-    let hasTriggered = false;
-    let enterTlComplete = false;
-    let removeFirstScrollListener: (() => void) | null = null;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const ctx = gsap.context(() => {
+      // 1. Initial State
       const initialScale = window.innerWidth < 768 ? 0.75 : 1;
-      const sceneContainer = document.getElementById("scene-container");
-
-      // ── 0. Initial states ──────────────────────────────────────────────────
-      gsap.set(scrollGroupRef.current!.rotation, { x: 0, y: 0, z: 0 });
-      gsap.set(scrollGroupRef.current!.position, { x: 0, y: 0, z: 0 });
       gsap.set(scrollGroupRef.current!.scale, { x: initialScale, y: initialScale, z: initialScale });
-      gsap.set(pivotGroupRef.current!.position, { x: 0, y: 5, z: 0 });
-      gsap.set(pivotGroupRef.current!.rotation, { x: 0, y: 0, z: Math.PI / 16 });
-      if (sceneContainer) gsap.set(sceneContainer, { opacity: 1 });
-
-      // ── setupScrollTrigger ─────────────────────────────────────────────────
-      // Called only after the reappear animation finishes (card already at 0.15).
-      // GSAP's "to" captures the current scale (0.15) as the from-value, so the
-      // scrub drives it cleanly from 0.15 → 0 over the full page length.
-      const setupScrollTrigger = () => {
-        if (!scrollGroupRef.current) return;
-
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: "#main-scroll-container",
-            start: "top top",
-            end: "bottom bottom",
-            scrub: true,
-            invalidateOnRefresh: true,
-          },
-        });
-
-        // Card: 0.15 → 0 (scale captured from current state), with a gentle tilt
-        tl.to(scrollGroupRef.current!.scale, { x: 0, y: 0, z: 0, ease: "none" }, 0)
-          .to(scrollGroupRef.current!.rotation, { x: -Math.PI / 8, z: Math.PI / 12, ease: "none" }, 0);
-
-        // Scene container fades to 0 in sync with the card disappearing
-        if (sceneContainer) {
-          tl.to(sceneContainer, { opacity: 0, ease: "none" }, 0);
-        }
-      };
-
-      // ── triggerTransition ──────────────────────────────────────────────────
-      // Fires exactly once on first scroll (> 5 px) or card click.
-      const triggerTransition = () => {
-        if (hasTriggered) return;
-        hasTriggered = true;
-
-        removeFirstScrollListener?.(); // stop listening now
-
-        // Pause idle sway and snap pivot to neutral
-        idleSwayRef.current?.pause();
-        gsap.to(pivotGroupRef.current!.rotation, { z: 0, duration: 0.2, overwrite: "auto" });
-
-        // Hide scroll prompt immediately
-        const scrollPrompt = document.getElementById("scroll-prompt");
-        if (scrollPrompt) gsap.to(scrollPrompt, { opacity: 0, duration: 0.2, overwrite: true });
-
-        // Reveal hero HTML content (slight delay so card starts disappearing first)
-        const heroContent = document.getElementById("hero-content");
-        if (heroContent) {
-          heroContent.style.pointerEvents = "auto";
-          gsap.to(heroContent, { opacity: 1, y: 0, duration: 0.85, ease: "expo.out", delay: 0.2 });
-        }
-
-        // Phase 2a: Card shrinks to nothing (0.28 s) ─────────────────────────
-        gsap.to(scrollGroupRef.current!.scale, {
-          x: 0, y: 0, z: 0,
-          duration: 0.28, ease: "power2.in",
-          onComplete: () => {
-            // Reset rotation so the reappear is perfectly upright
-            gsap.set(pivotGroupRef.current!.rotation, { z: 0 });
-            gsap.set(scrollGroupRef.current!.rotation, { x: 0, y: 0, z: 0 });
-
-            // Phase 2b: Card pops back at small background scale (0.38 s) ────
-            gsap.to(scrollGroupRef.current!.scale, {
-              x: 0.15, y: 0.15, z: 0.15,
-              duration: 0.38, ease: "back.out(1.4)",
-              onComplete: setupScrollTrigger, // Phase 3 begins here
-            });
-          },
-        });
-      };
-
-      // ── 1. ENTRANCE ANIMATION (Fall + Pendulum) ────────────────────────────
-      const enterTl = gsap.timeline({
-        onComplete: () => {
-          enterTlComplete = true;
-
-          // Show "Scroll to explore" prompt (only if still at page top)
-          const scrollPrompt = document.getElementById("scroll-prompt");
-          if (scrollPrompt && window.scrollY < 50) {
-            gsap.to(scrollPrompt, { opacity: 0.8, duration: 0.6, ease: "power2.out" });
-          }
-
-          // Start idle sway
-          if (window.scrollY < 50) {
-            idleSwayRef.current?.play();
-          }
-
-          // Edge case: user scrolled during the entrance animation
-          if (window.scrollY > 5) {
-            triggerTransition();
-          }
-        },
+      gsap.set(scrollGroupRef.current!.rotation, { x: 0, y: 0, z: 0 });
+      gsap.set(scrollGroupRef.current!.position, { 
+        x: window.innerWidth < 768 ? 0 : 2, 
+        y: window.innerWidth < 768 ? 1.5 : 0, 
+        z: 0 
       });
+      
+      gsap.set(pivotGroupRef.current!.position, { x: 0, y: 0, z: 0 }); // Rest position
+      gsap.set(pivotGroupRef.current!.rotation, { x: 0, y: 0, z: 0 }); // Rest rotation
 
-      enterTl.to(pivotGroupRef.current!.position, {
-        y: 1.05, // rest position of pivot
-        duration: 0.7,
-        ease: "power2.in",
-      });
+      if (!prefersReducedMotion) {
+        // Entry Drop Animation (Strict vertical fall under gravity, no bounce)
+        gsap.fromTo(
+          entryGroupRef.current!.position,
+          { y: 6 },
+          { y: 0, duration: 1.2, ease: "power2.out", delay: 0.5, onUpdate: () => invalidate() }
+        );
+        
+        // Pendulum Swing (Rotational oscillation decaying to stop)
+        gsap.fromTo(
+          entryGroupRef.current!.rotation,
+          { z: Math.PI / 8 },
+          { z: 0, duration: 2.5, ease: "elastic.out(1, 0.4)", delay: 0.5, onUpdate: () => invalidate() }
+        );
+      }
 
-      const swingDuration = 0.5;
-      enterTl
-        .to(pivotGroupRef.current!.rotation, { z: -Math.PI / 12, duration: swingDuration, ease: "sine.inOut" })
-        .to(pivotGroupRef.current!.rotation, { z:  Math.PI / 20, duration: swingDuration, ease: "sine.inOut" })
-        .to(pivotGroupRef.current!.rotation, { z: -Math.PI / 32, duration: swingDuration, ease: "sine.inOut" })
-        .to(pivotGroupRef.current!.rotation, { z:  Math.PI / 64, duration: swingDuration, ease: "sine.inOut" })
-        .to(pivotGroupRef.current!.rotation, { z: 0,             duration: swingDuration, ease: "sine.inOut" });
-
-      // ── 2. IDLE SWAY (paused until entrance completes) ────────────────────
+      // 2. Idle Motion (Breathing)
       idleSwayRef.current = gsap.to(pivotGroupRef.current!.rotation, {
-        z: Math.PI / 90,
-        duration: 2.5,
+        y: Math.PI / 32,
+        z: Math.PI / 64,
+        duration: 4,
         ease: "sine.inOut",
         yoyo: true,
         repeat: -1,
-        paused: true,
+        onUpdate: () => invalidate(),
       });
 
-      // ── 3. FIRST SCROLL LISTENER ──────────────────────────────────────────
-      // Waits for entrance to finish (enterTlComplete) before triggering.
-      const handleFirstScroll = () => {
-        if (window.scrollY > 5 && enterTlComplete) {
-          triggerTransition();
-        }
-      };
-      window.addEventListener("scroll", handleFirstScroll, { passive: true });
-      removeFirstScrollListener = () => window.removeEventListener("scroll", handleFirstScroll);
+      idleFloatRef.current = gsap.to(pivotGroupRef.current!.position, {
+        y: 0.1,
+        duration: 3,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1,
+        onUpdate: () => invalidate(),
+      });
 
-      // ── 4. CLICK / TAP HANDLER ────────────────────────────────────────────
-      handleCardClickRef.current = () => {
-        if (!enterTlComplete) return; // ignore clicks during entrance
-        triggerTransition();
-        // After a short delay (so the disappear animation starts), scroll slightly
-        // to kick off the scroll-linked Phase 3.
-        setTimeout(() => {
-          if (window.scrollY < 50) {
-            window.scrollTo({ top: 80, behavior: "smooth" });
+      // 3. Scroll-Driven Transform tied perfectly to #hero section
+      let mm = gsap.matchMedia();
+
+      mm.add({
+        isDesktop: "(min-width: 768px)",
+        isMobile: "(max-width: 767px)"
+      }, (context) => {
+        const { isDesktop } = context.conditions as { isDesktop: boolean };
+        
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: "#hero",
+            start: "top top",
+            end: "bottom top", // Scoped ONLY to hero
+            scrub: true,
+            invalidateOnRefresh: true,
+            onLeave: () => {
+              // Fade out scene container completely to prevent overlaps outside hero
+              const sceneContainer = document.getElementById("scene-container");
+              if (sceneContainer) gsap.to(sceneContainer, { opacity: 0, pointerEvents: "none", duration: 0.2 });
+            },
+            onEnterBack: () => {
+              // Fade it back in when scrolling back into hero
+              const sceneContainer = document.getElementById("scene-container");
+              if (sceneContainer) gsap.to(sceneContainer, { opacity: 1, duration: 0.2 });
+            }
           }
-        }, 200);
-      };
+        });
+
+        if (isDesktop && !prefersReducedMotion) {
+          const endScale = 0.65;
+          // Main Rotation, Scale, and Translation
+          tl.to(scrollGroupRef.current!.position, {
+            x: 3, // Drift right on desktop
+            y: 0.5, // Drift slightly up
+            z: -1,
+            ease: "none",
+          }, 0)
+          .to(scrollGroupRef.current!.scale, {
+            x: endScale,
+            y: endScale,
+            z: endScale,
+            ease: "none",
+          }, 0)
+          .to(scrollGroupRef.current!.rotation, {
+            x: Math.PI / 12,
+            y: Math.PI, // Flip exactly to the back face
+            z: -Math.PI / 24,
+            ease: "none",
+          }, 0);
+        } else if (!prefersReducedMotion) {
+          // On mobile, stay centered but do the Y flip to show the back face
+          tl.to(scrollGroupRef.current!.position, { y: 1 }, 0)
+            .to(scrollGroupRef.current!.rotation, {
+              x: Math.PI / 12,
+              y: Math.PI, // Flip exactly to the back face
+              z: -Math.PI / 24,
+              ease: "none",
+            }, 0);
+        }
+      });
     });
 
     return () => {
-      removeFirstScrollListener?.();
       ctx.revert();
     };
-  }, []); // Empty dep array — avoids re-running on state changes
-
-  // Touch tap handler for mobile — the R3F onClick fires on pointer events,
-  // but we also attach a native touchend to the canvas parent for reliability
-  useEffect(() => {
-    const canvasParent = document.getElementById('scene-container');
-    if (!canvasParent) return;
-
-    const handleTouchEnd = (e: TouchEvent) => {
-      // Only trigger if it was a tap (not a scroll gesture)
-      if (e.changedTouches.length === 1) {
-        handleCardClickRef.current?.();
-      }
-    };
-
-    canvasParent.addEventListener('touchend', handleTouchEnd, { passive: true });
-    return () => canvasParent.removeEventListener('touchend', handleTouchEnd);
   }, []);
 
   return (
@@ -365,44 +317,25 @@ function SceneContent() {
       <SceneReadyRefresher />
       <ambientLight intensity={1.5} />
       <directionalLight position={[10, 10, 5]} intensity={2} />
-      {/* Blue Rim Light */}
-      <spotLight position={[-2, 2, -3]} intensity={20} color="#3b82f6" penumbra={1} distance={15} />
-      <pointLight position={[0, 0, -2]} intensity={10} color="#3b82f6" />
+      {/* Amber Rim Light */}
+      <spotLight position={[-2, 2, -3]} intensity={20} color="#D9A15C" penumbra={1} distance={15} />
+      <pointLight position={[0, 0, -2]} intensity={10} color="#D9A15C" />
 
       <Suspense fallback={null}>
         <Environment preset="city" />
       </Suspense>
 
-      <group ref={scrollGroupRef}>
-        <group position={[0, 1.05, 0]} ref={pivotGroupRef}>
-          <group
-            position={[0, -1.05, 0]}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleCardClickRef.current?.();
-            }}
-            onPointerOver={() => document.body.style.cursor = 'pointer'}
-            onPointerOut={() => document.body.style.cursor = 'auto'}
-          >
-            <Suspense fallback={null}>
-              <IDCard isMobile={isMobile} />
-            </Suspense>
+      <group ref={entryGroupRef}>
+        <group ref={scrollGroupRef}>
+          <group position={[0, 1.05, 0]} ref={pivotGroupRef}>
+            <group position={[0, -1.05, 0]}>
+              <Suspense fallback={null}>
+                <IDCard isMobile={isMobile} />
+              </Suspense>
+            </group>
           </group>
         </group>
       </group>
-
-      {/* Desktop: full postprocessing. Mobile: lighter bloom only, no chromatic aberration */}
-      <EffectComposer multisampling={0}>
-        <Bloom
-          luminanceThreshold={isMobile ? 1.5 : 1.2}
-          luminanceSmoothing={0.9}
-          intensity={isMobile ? 0.3 : 0.6}
-        />
-        {!isMobile && (
-          <ChromaticAberration offset={new THREE.Vector2(0.0007, 0.0007)} />
-        )}
-        <Vignette eskil={false} offset={0.1} darkness={isMobile ? 0.7 : 0.9} />
-      </EffectComposer>
 
       <OrbitControls
         enableZoom={false}
@@ -413,13 +346,15 @@ function SceneContent() {
             idleSwayRef.current.pause();
             gsap.to(pivotGroupRef.current!.rotation, { z: 0, duration: 0.5, overwrite: "auto" });
           }
+          if (idleFloatRef.current?.isActive()) {
+            idleFloatRef.current.pause();
+            gsap.to(pivotGroupRef.current!.position, { y: 0, duration: 0.5, overwrite: "auto" });
+          }
         }}
         onEnd={() => {
-          // Restart sway after user stops interacting (if at top of page)
           setTimeout(() => {
-            if (window.scrollY < 50 && idleSwayRef.current?.paused()) {
-              idleSwayRef.current.play();
-            }
+            if (idleSwayRef.current?.paused()) idleSwayRef.current.play();
+            if (idleFloatRef.current?.paused()) idleFloatRef.current.play();
           }, 2000);
         }}
       />
@@ -431,8 +366,8 @@ export default function Scene() {
   return (
     <div className="absolute inset-0 h-full w-full pointer-events-auto" style={{ zIndex: 0 }}>
       <ErrorBoundary>
-        {/* Cap DPR at 2 — Math.min(window.devicePixelRatio, 2) */}
-        <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 4.5], fov: 45 }}>
+        {/* Cap DPR at 2 */}
+        <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 4.5], fov: 45 }} frameloop="demand">
           <SceneContent />
         </Canvas>
       </ErrorBoundary>

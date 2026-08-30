@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="w-full border-t border-white/10 bg-[#0a0a0a] py-12 px-6">
+    <footer className="w-full border-t border-white/10 bg-[#0a0a0a] py-12 px-6 relative z-10">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
         
         {/* Brand */}

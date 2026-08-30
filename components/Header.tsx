@@ -2,7 +2,9 @@
 
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "motion/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export default function Header() {
   const { scrollY, scrollYProgress } = useScroll();
@@ -10,7 +12,7 @@ export default function Header() {
   
   // Nav bar shrinks as you scroll
   const navHeight = useTransform(scrollY, [0, 100], [80, 60]);
-  const navBackground = useTransform(scrollY, [0, 100], ["rgba(10, 10, 10, 0)", "rgba(0, 0, 0, 0.9)"]);
+  const navBackground = useTransform(scrollY, [0, 100], ["rgba(10, 10, 10, 0)", "rgba(10, 10, 11, 0.9)"]);
   const navBackdropFilter = useTransform(scrollY, [0, 100], ["blur(0px)", "blur(24px)"]);
   
   // Progress bar smoothing
@@ -21,12 +23,51 @@ export default function Header() {
   });
 
   const links = [
-    { name: "Home", href: "#hero" },
-    { name: "About", href: "#about" },
-    { name: "Experience", href: "#experience" },
-    { name: "Achievements", href: "#achievements" },
-    { name: "Contact", href: "#closing" },
+    { name: "Home", href: "#hero", id: "hero" },
+    { name: "Projects", href: "#projects", id: "projects" },
+    { name: "Experience", href: "#experience", id: "experience" },
+    { name: "Skills", href: "#skills", id: "skills" },
+    { name: "Competitions", href: "#competitions", id: "competitions" },
+    { name: "Contact", href: "#contact", id: "contact" },
   ];
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    
+    const triggers: ScrollTrigger[] = [];
+    
+    links.forEach(link => {
+      const section = document.getElementById(link.id);
+      const navItem = document.getElementById(`nav-${link.id}`);
+      const mobileNavItem = document.getElementById(`mobile-nav-${link.id}`);
+      
+      if (section && (navItem || mobileNavItem)) {
+        const trigger = ScrollTrigger.create({
+          trigger: section,
+          start: "top center",
+          end: "bottom center",
+          onToggle: (self) => {
+            if (self.isActive) {
+              if (navItem) navItem.classList.add("text-[#D9A15C]");
+              if (navItem) navItem.classList.remove("text-[#9A9AA5]");
+              if (mobileNavItem) mobileNavItem.classList.add("text-[#D9A15C]");
+              if (mobileNavItem) mobileNavItem.classList.remove("text-[#9A9AA5]");
+            } else {
+              if (navItem) navItem.classList.remove("text-[#D9A15C]");
+              if (navItem) navItem.classList.add("text-[#9A9AA5]");
+              if (mobileNavItem) mobileNavItem.classList.remove("text-[#D9A15C]");
+              if (mobileNavItem) mobileNavItem.classList.add("text-[#9A9AA5]");
+            }
+          }
+        });
+        triggers.push(trigger);
+      }
+    });
+    
+    return () => {
+      triggers.forEach(t => t.kill());
+    };
+  }, []);
 
   return (
     <>
@@ -37,14 +78,21 @@ export default function Header() {
           backdropFilter: navBackdropFilter,
           WebkitBackdropFilter: navBackdropFilter
         }}
-        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 border-b border-blue-500/20 shadow-lg shadow-black/20"
+        className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 border-b border-primary/20 shadow-lg shadow-black/20 transition-colors"
       >
-        <div className="text-xl font-bold text-white tracking-tighter">Allan K J</div>
+        <div className="text-sm font-semibold font-heading text-[#EDEDF2] tracking-[0.06em] uppercase hover:text-[#D9A15C] transition-colors">
+          Allan K J
+        </div>
         
         {/* Desktop Nav */}
         <nav className="hidden md:flex gap-4 lg:gap-8">
           {links.map((link) => (
-            <Link key={link.name} href={link.href} className="text-sm font-medium text-zinc-400 hover:text-white transition-colors p-2 min-h-[44px] inline-flex items-center">
+            <Link 
+              key={link.name} 
+              href={link.href} 
+              id={`nav-${link.id}`}
+              className="text-[0.7rem] font-medium tracking-[0.12em] uppercase text-[#9A9AA5] hover:text-[#EDEDF2] transition-all p-2 min-h-[44px] inline-flex items-center"
+            >
               {link.name}
             </Link>
           ))}
@@ -52,18 +100,18 @@ export default function Header() {
 
         {/* Mobile Hamburger */}
         <button 
-          className="md:hidden p-2 text-white flex flex-col justify-center items-center gap-1.5 w-12 h-12 z-[60]"
+          className="md:hidden p-2 text-white hover:text-primary transition-colors flex flex-col justify-center items-center gap-1.5 w-12 h-12 z-[60]"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle Menu"
         >
-          <motion.span animate={isOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }} className="w-6 h-0.5 bg-white block transition-transform"></motion.span>
-          <motion.span animate={isOpen ? { opacity: 0 } : { opacity: 1 }} className="w-6 h-0.5 bg-white block transition-opacity"></motion.span>
-          <motion.span animate={isOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }} className="w-6 h-0.5 bg-white block transition-transform"></motion.span>
+          <motion.span animate={isOpen ? { rotate: 45, y: 8, backgroundColor: "var(--primary)" } : { rotate: 0, y: 0, backgroundColor: "#fff" }} className="w-6 h-0.5 block transition-transform"></motion.span>
+          <motion.span animate={isOpen ? { opacity: 0 } : { opacity: 1, backgroundColor: "#fff" }} className="w-6 h-0.5 block transition-opacity"></motion.span>
+          <motion.span animate={isOpen ? { rotate: -45, y: -8, backgroundColor: "var(--primary)" } : { rotate: 0, y: 0, backgroundColor: "#fff" }} className="w-6 h-0.5 block transition-transform"></motion.span>
         </button>
 
         {/* Progress Bar */}
         <motion.div 
-          className="absolute bottom-0 left-0 right-0 h-[2px] bg-blue-500 origin-left shadow-[0_0_10px_rgba(37,99,235,0.8)]"
+          className="absolute bottom-0 left-0 right-0 h-[1px] bg-[#D9A15C]/70 origin-left"
           style={{ scaleX }}
         />
       </motion.header>
@@ -81,8 +129,9 @@ export default function Header() {
               <Link 
                 key={link.name} 
                 href={link.href} 
+                id={`mobile-nav-${link.id}`}
                 onClick={() => setIsOpen(false)}
-                className="text-2xl font-black text-zinc-400 hover:text-white transition-colors min-h-[44px] flex items-center justify-center p-4 w-full"
+                className="text-lg font-medium tracking-[0.1em] uppercase text-[#9A9AA5] hover:text-[#D9A15C] transition-all min-h-[44px] flex items-center justify-center p-4 w-full"
               >
                 {link.name}
               </Link>
