@@ -92,7 +92,7 @@ export default function Competitions() {
               </div>
               
               <div className="relative z-10 transition-transform duration-500 group-hover:translate-x-1">
-                <p className="text-[#8FD9FF] font-medium tracking-[0.12em] uppercase text-[0.65rem] mb-4">
+                <p className="text-[#D9A15C] font-medium tracking-[0.12em] uppercase text-[0.65rem] mb-4">
                   {comp.date}
                 </p>
                 <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#EDEDF2] mb-7 tracking-[-0.02em]">

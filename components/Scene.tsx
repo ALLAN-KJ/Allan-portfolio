@@ -19,8 +19,8 @@ function IDCard({ isMobile = false }: { isMobile?: boolean }) {
       <RoundedBox args={[3.4, 2.1, 0.05]} radius={0.05} smoothness={4}>
         <MeshTransmissionMaterial
           backside
-          samples={isMobile ? 3 : 4}
-          resolution={isMobile ? 512 : 768}
+          samples={isMobile ? 2 : 3}
+          resolution={isMobile ? 256 : 512}
           thickness={0.5}
           roughness={0.3}
           transmission={1.0}
@@ -136,7 +136,7 @@ function IDCard({ isMobile = false }: { isMobile?: boolean }) {
 
         {/* Register Number */}
         <Text
-          position={[0, -0.2, 0.001]}
+          position={[0, 0.6, 0.002]}
           fontSize={0.2}
           color="#D9A15C"
           anchorX="center"
@@ -158,7 +158,17 @@ function SceneReadyRefresher() {
   const refreshed = useRef(false);
 
   useEffect(() => {
-    const onScroll = () => invalidate();
+    // Throttled scroll invalidation — cap at ~60fps to avoid over-rendering
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
+          invalidate();
+          ticking = false;
+        });
+      }
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -196,12 +206,14 @@ function SceneContent() {
 
     const ctx = gsap.context(() => {
       // 1. Initial State
-      const initialScale = window.innerWidth < 768 ? 0.75 : 1;
+      // 25% smaller scale (desktop 1→0.75, mobile 0.75→0.5625)
+      const initialScale = window.innerWidth < 768 ? 0.5625 : 0.75;
       gsap.set(scrollGroupRef.current!.scale, { x: initialScale, y: initialScale, z: initialScale });
       gsap.set(scrollGroupRef.current!.rotation, { x: 0, y: 0, z: 0 });
+      // 25% higher resting Y (desktop 0→0.5, mobile 1.5→1.875)
       gsap.set(scrollGroupRef.current!.position, { 
         x: window.innerWidth < 768 ? 0 : 2, 
-        y: window.innerWidth < 768 ? 1.5 : 0, 
+        y: window.innerWidth < 768 ? 1.875 : 0.5, 
         z: 0 
       });
       
@@ -258,7 +270,7 @@ function SceneContent() {
             trigger: "#hero",
             start: "top top",
             end: "bottom top", // Scoped ONLY to hero
-            scrub: true,
+            scrub: 1, // Responsive scrub with slight smoothing (1s catch-up)
             invalidateOnRefresh: true,
             onLeave: () => {
               // Fade out scene container completely to prevent overlaps outside hero
@@ -274,11 +286,12 @@ function SceneContent() {
         });
 
         if (isDesktop && !prefersReducedMotion) {
-          const endScale = 0.65;
+          // Proportionally scaled end values (25% smaller baseline)
+          const endScale = 0.4875; // 0.65 * 0.75
           // Main Rotation, Scale, and Translation
           tl.to(scrollGroupRef.current!.position, {
             x: 3, // Drift right on desktop
-            y: 0.5, // Drift slightly up
+            y: 0.85, // Drift slightly up (higher baseline)
             z: -1,
             ease: "none",
           }, 0)
@@ -296,7 +309,7 @@ function SceneContent() {
           }, 0);
         } else if (!prefersReducedMotion) {
           // On mobile, stay centered but do the Y flip to show the back face
-          tl.to(scrollGroupRef.current!.position, { y: 1 }, 0)
+          tl.to(scrollGroupRef.current!.position, { y: 1.375 }, 0) // Higher baseline for mobile
             .to(scrollGroupRef.current!.rotation, {
               x: Math.PI / 12,
               y: Math.PI, // Flip exactly to the back face

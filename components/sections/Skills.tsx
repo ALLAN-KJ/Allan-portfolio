@@ -92,7 +92,7 @@ export default function Skills() {
             >
               <h3 className="text-base font-semibold font-heading text-[#EDEDF2] mb-6 flex items-center gap-3 tracking-[0.05em] uppercase transition-transform duration-500 group-hover:translate-x-1">
                 <span className="w-5 h-5 rounded-full border border-[#D9A15C]/40 flex items-center justify-center group-hover:border-[#D9A15C]/80 transition-colors">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#8FD9FF]/60 group-hover:bg-[#8FD9FF] transition-colors" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#D9A15C]/60 group-hover:bg-[#D9A15C] transition-colors" />
                 </span>
                 {category.title}
               </h3>

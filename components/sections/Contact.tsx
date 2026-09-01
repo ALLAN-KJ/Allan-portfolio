@@ -99,7 +99,7 @@ export default function Contact() {
           >
             LinkedIn
           </a>
-          <span className="w-1 h-1 rounded-full bg-[#8FD9FF]/40" />
+          <span className="w-1 h-1 rounded-full bg-[#D9A15C]/40" />
           <a
             href="https://github.com/ALLAN-KJ"
             target="_blank"

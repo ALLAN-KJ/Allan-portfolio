@@ -10,10 +10,11 @@ gsap.registerPlugin(ScrollTrigger);
 export default function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
     const lenis = new Lenis({
-      lerp: 0.08,
+      lerp: 0.1, // Slightly higher for snappier response (was 0.08)
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
+      syncTouch: true, // Smooth touch-based scrolling on mobile
       wheelMultiplier: 1,
       touchMultiplier: 2,
     });
