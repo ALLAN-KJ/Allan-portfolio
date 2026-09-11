@@ -26,19 +26,21 @@ export default function CustomCursor() {
 
     const handleHover = () => {
       gsap.to(cursor, { 
-        scale: 2.5, 
+        scale: 2,
         backgroundColor: "transparent", 
         border: "1px solid #D9A15C", 
-        duration: 0.3 
+        duration: 0.3,
+        ease: "power3.out"
       });
     };
 
     const handleLeave = () => {
       gsap.to(cursor, { 
-        scale: 1, 
+        scale: 1,
         backgroundColor: "#D9A15C", 
         border: "0px solid #D9A15C", 
-        duration: 0.3 
+        duration: 0.3,
+        ease: "power3.out"
       });
     };
 

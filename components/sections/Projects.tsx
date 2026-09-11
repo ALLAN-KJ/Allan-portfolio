@@ -48,6 +48,13 @@ export default function Projects() {
         trigger: container,
         start: "top 80%",
         toggleActions: "play none none reverse",
+        onEnter: () => {
+          const heading = document.querySelector('.projects-heading');
+          if (heading) {
+            heading.classList.add('glitch-active');
+            setTimeout(() => heading.classList.remove('glitch-active'), 300);
+          }
+        }
       },
       y: 0,
       opacity: 1,
@@ -63,39 +70,45 @@ export default function Projects() {
 
   const projects = [
     {
-      title: "Tool Finder",
-      category: "5-Day AI Build Sprint",
+      title: "Personal Portfolio Website",
+      category: "3D Interactive Site",
       description:
-        "Built solo in a 5-day AI build sprint (Conesta Forge). Reached a Forge Score of 1,391, ranking #33 on the leaderboard.",
-      link: null,
-      buttonText: "Confidential",
-    },
-    {
-      title: "This Portfolio",
-      category: "Web Development",
-      description:
-        "Interactive 3D site built with Next.js, React Three Fiber, GSAP, and Lenis for smooth scroll UX and cinematic presentation.",
+        "Built with Next.js, TypeScript, Three.js, React Three Fiber, GSAP, and Tailwind CSS. Features an interactive 3D scene with scroll-linked animation. Implemented smooth-scroll UX (Lenis) and post-processing visual effects (bloom, depth) for a polished, cinematic presentation.",
       link: "https://allan-portfolioo.vercel.app",
       buttonText: "See the build",
     },
     {
-      title: "ZF Group HMI Dashboard",
-      category: "Industrial Control Interface",
+      title: "Student LMS Platform",
+      category: "Full-Stack Web App",
       description:
-        "React/TypeScript UI changes to an industrial oil-bath monitoring interface at ZF Friedrichshafen AG. (Internal/Confidential)",
+        "Full-stack learning management system built during a Qaroo internship — features API integration and live student-facing functionality.",
+      link: "https://student-lms-vds8.onrender.com/",
+      buttonText: "View Live",
+    },
+    {
+      title: "GHOST",
+      category: "AI Voice Assistant",
+      description:
+        "Built an AI-based voice assistant that responds to human voice commands. Capable of sending WhatsApp messages, opening websites (Google, YouTube Music, YouTube, etc.).",
       link: null,
-      buttonText: "Confidential",
+      buttonText: "Coming Soon",
+    },
+    {
+      title: "Education Platform Theme",
+      category: "Web Development (In Progress)",
+      description:
+        "Currently building a book-shaped, themed website for an education-based platform.",
+      link: null,
+      buttonText: "In Progress",
     },
   ];
 
   return (
-    <section
-      id="projects"
-      ref={containerRef}
-      className="w-full relative bg-[#0C0D12] z-[30] py-32 flex flex-col items-center"
+    <section id="projects" ref={containerRef} 
+      className="w-full relative bg-[#0C0D12] z-[30] py-48 flex flex-col items-center"
     >
-      <div className="w-full max-w-7xl mx-auto px-6 lg:px-8 mb-24 text-center md:text-left">
-        <h2 className="projects-heading text-[4rem] md:text-[6rem] lg:text-[8rem] font-black font-heading text-[#EDEDF2] tracking-[-0.03em] leading-[0.92]">
+      <div className="w-full max-w-7xl mx-auto px-6 lg:px-8 mb-20 text-center md:text-left">
+        <h2 className="projects-heading text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] tracking-[-0.05em] leading-[0.9]">
           Selected<br className="hidden md:block"/> Works<span className="text-[#D9A15C]">.</span>
         </h2>
       </div>
@@ -107,13 +120,13 @@ export default function Projects() {
         {projects.map((project, idx) => (
           <div
             key={idx}
-            className="project-card group w-full bg-[#0F111A] border border-[#D9A15C]/15 rounded-[1.5rem] p-8 md:p-10 flex flex-col justify-between hover:border-[#D9A15C]/40 transition-all duration-500 hover:-translate-y-2 hover:scale-[1.01] hover:shadow-[0_0_30px_rgba(217,161,92,0.08)] shadow-lg cursor-default"
+            className="project-card group w-full bg-[#0F111A] border border-[#D9A15C]/15 rounded-[1.5rem] p-8 md:p-10 flex flex-col justify-between hover:border-[#D9A15C]/50 transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(217,161,92,0.12)] shadow-lg cursor-default"
           >
             <div>
               <p className="text-[#D9A15C] font-medium tracking-[0.12em] uppercase text-[0.65rem] md:text-[0.7rem] mb-5 transition-transform duration-500 group-hover:translate-x-1">
                 {project.category}
               </p>
-              <h3 className="text-2xl md:text-3xl font-bold font-heading text-[#EDEDF2] mb-5 tracking-[-0.02em] transition-transform duration-500 group-hover:translate-x-1">{project.title}</h3>
+              <h3 className="glitch-hover text-2xl md:text-3xl font-bold font-heading text-[#EDEDF2] mb-5 tracking-[-0.02em] transition-transform duration-500 group-hover:translate-x-1">{project.title}</h3>
               <p className="text-[#9A9AA5] text-sm md:text-base leading-[1.7] font-light">{project.description}</p>
             </div>
             <div className="mt-10 transition-transform duration-500 group-hover:translate-y-[-4px]">
@@ -122,7 +135,7 @@ export default function Projects() {
                   {project.buttonText}
                 </AnimatedButton>
               ) : (
-                <div className="px-5 py-2.5 rounded-full border border-white/10 text-[#9A9AA5] inline-block text-[0.65rem] md:text-xs font-medium cursor-not-allowed uppercase tracking-[0.12em]">
+                <div className="px-6 py-3 rounded-full border border-white/10 text-[#9A9AA5] inline-flex items-center text-xs font-medium cursor-not-allowed uppercase tracking-[0.12em] min-h-[44px]">
                   {project.buttonText}
                 </div>
               )}

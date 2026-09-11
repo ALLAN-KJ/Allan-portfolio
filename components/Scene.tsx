@@ -1,7 +1,8 @@
 "use client";
 
-import { Canvas, useFrame, useThree, invalidate } from "@react-three/fiber";
-import { OrbitControls, Environment, RoundedBox, Text, useTexture, MeshTransmissionMaterial } from "@react-three/drei";
+import { Canvas, useFrame, useThree, invalidate, extend } from "@react-three/fiber";
+import { OrbitControls, Environment, RoundedBox, Text, useTexture, MeshTransmissionMaterial, shaderMaterial } from "@react-three/drei";
+import { EffectComposer, Glitch } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { useRef, useEffect, useState, Suspense } from "react";
 import gsap from "gsap";
@@ -10,11 +11,87 @@ import { ErrorBoundary } from "./ErrorBoundary";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const RippleShaderMaterial = shaderMaterial(
+  {
+    uTexture: new THREE.Texture(),
+    uTextureBw: new THREE.Texture(),
+    uHover: 0,
+    uTime: 0,
+    uPointer: new THREE.Vector2(0.5, 0.5),
+  },
+  // vertex shader
+  `
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+  `,
+  // fragment shader
+  `
+  uniform sampler2D uTexture;
+  uniform sampler2D uTextureBw;
+  uniform float uHover;
+  uniform float uTime;
+  uniform vec2 uPointer;
+  varying vec2 vUv;
+
+  void main() {
+    float dist = distance(vUv, uPointer);
+    float ripple = sin(dist * 30.0 - uTime * 15.0) * 0.03 * uHover;
+    vec2 distortedUv = vUv + normalize(vUv - uPointer + 0.0001) * ripple;
+    
+    vec4 color = texture2D(uTexture, distortedUv);
+    vec4 bwColor = texture2D(uTextureBw, distortedUv);
+    
+    gl_FragColor = mix(color, bwColor, uHover);
+  }
+  `
+);
+
+extend({ RippleShaderMaterial });
+
 function IDCard({ isMobile = false }: { isMobile?: boolean }) {
-  const photoTexture = useTexture("/images/allan-photo.jpg");
+  const photoTexture = useTexture("/images/allan_coat.png");
+  const photoTextureBw = useTexture("/images/allan_coatbw.png");
+  const [hovered, setHovered] = useState(false);
+  const materialRef = useRef<any>(null);
+
+  useFrame((state, delta) => {
+    if (typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches) {
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const target = hovered ? 1 : 0;
+      
+      if (materialRef.current) {
+        materialRef.current.uTime = state.clock.elapsedTime;
+        if (reducedMotion) {
+          materialRef.current.uHover = target;
+        } else {
+          materialRef.current.uHover = THREE.MathUtils.lerp(
+            materialRef.current.uHover,
+            target,
+            delta * 5
+          );
+        }
+        if (hovered || materialRef.current.uHover > 0.01) {
+          invalidate();
+        }
+      }
+    }
+  });
 
   return (
     <group>
+      <EffectComposer>
+        <Glitch
+          delay={[1.5, 3.5]}
+          duration={[0.1, 0.3]}
+          strength={[0.1, 0.2]}
+          active={hovered && !window.matchMedia("(prefers-reduced-motion: reduce)").matches}
+          ratio={0.5}
+        />
+      </EffectComposer>
+
       {/* Main Card */}
       <RoundedBox args={[3.4, 2.1, 0.05]} radius={0.05} smoothness={4}>
         <MeshTransmissionMaterial
@@ -107,10 +184,25 @@ function IDCard({ isMobile = false }: { isMobile?: boolean }) {
           <meshBasicMaterial color={[1.5, 1.5, 1.5] as any} toneMapped={false} />
         </mesh>
 
-        {/* Real Photo Texture */}
-        <mesh position={[1.0, 0, 0]}>
+        {/* Photo with Interactive Ripple Shader */}
+        <mesh 
+          position={[1.0, 0, 0.001]}
+          onPointerOver={() => setHovered(true)}
+          onPointerOut={() => setHovered(false)}
+          onPointerMove={(e) => {
+            if (e.uv && materialRef.current) {
+              materialRef.current.uPointer.copy(e.uv);
+            }
+          }}
+        >
           <planeGeometry args={[0.8, 1.0]} />
-          <meshBasicMaterial map={photoTexture} toneMapped={false} />
+          {/* @ts-ignore */}
+          <rippleShaderMaterial 
+            ref={materialRef} 
+            uTexture={photoTexture} 
+            uTextureBw={photoTextureBw}
+            toneMapped={false}
+          />
         </mesh>
 
         {/* Bottom Bar Accent */}

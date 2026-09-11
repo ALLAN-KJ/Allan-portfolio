@@ -40,6 +40,13 @@ export default function Skills() {
           trigger: containerRef.current,
           start: "top 80%",
           toggleActions: "play none none reverse",
+          onEnter: () => {
+            const heading = document.querySelector('.skills-heading');
+            if (heading) {
+              heading.classList.add('glitch-active');
+              setTimeout(() => heading.classList.remove('glitch-active'), 300);
+            }
+          }
         },
         y: 50,
         opacity: 0,
@@ -61,24 +68,20 @@ export default function Skills() {
       skills: ["Python", "C", "HTML", "CSS", "JavaScript"],
     },
     {
-      title: "Domains",
-      skills: ["Cybersecurity", "System Design", "IoT", "Linux System Administration"],
+      title: "APIs & Tools",
+      skills: ["ElevenLabs API", "Git", "VS Code"],
     },
     {
-      title: "Certifications",
-      skills: [
-        "Red Hat System Administration I (RH124)",
-        "Cisco IoT & Digital Transformation",
-        "EC-Council Cybersecurity Workshop",
-      ],
+      title: "Domains",
+      skills: ["Cybersecurity", "System Design", "IoT", "Linux System Administration"],
     },
   ];
 
   return (
-    <section id="skills" ref={containerRef} className="py-32 w-full bg-[#0C0D12] border-t border-white/5 relative">
+    <section id="skills" ref={containerRef} className="py-48 w-full bg-[#0C0D12] border-t border-white/5 relative">
       <div className="max-w-6xl mx-auto px-6">
-        <h2 className="skills-heading text-[clamp(2.25rem,8vw,3.75rem)] font-black font-heading text-[#EDEDF2] mb-20 text-center tracking-[-0.03em] leading-[0.92]">
-          Skills {"&"} Certifications<span className="text-[#D9A15C]">.</span>
+        <h2 className="skills-heading text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] mb-20 text-center tracking-[-0.05em] leading-[0.9]">
+          Skills<span className="text-[#D9A15C]">.</span>
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -88,7 +91,7 @@ export default function Skills() {
               ref={(el) => {
                 itemsRef.current[idx] = el;
               }}
-              className="group bg-[#0F111A] border border-white/5 rounded-[1.5rem] p-8 hover:border-[#D9A15C]/30 transition-all duration-500 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-[0_0_25px_rgba(217,161,92,0.07)] shadow-md cursor-default"
+              className="group bg-[#0F111A] border border-white/5 rounded-[1.5rem] p-8 hover:border-[#D9A15C]/40 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:shadow-[0_0_35px_rgba(217,161,92,0.1)] shadow-md cursor-default"
             >
               <h3 className="text-base font-semibold font-heading text-[#EDEDF2] mb-6 flex items-center gap-3 tracking-[0.05em] uppercase transition-transform duration-500 group-hover:translate-x-1">
                 <span className="w-5 h-5 rounded-full border border-[#D9A15C]/40 flex items-center justify-center group-hover:border-[#D9A15C]/80 transition-colors">

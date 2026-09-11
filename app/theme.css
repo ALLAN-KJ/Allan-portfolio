@@ -5,10 +5,9 @@
   --color-foreground: #EDEDF2;
   
   --color-primary: #D9A15C;
-  --color-secondary: #8FD9FF;
   
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-heading: 'Clash Display', 'General Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-clash), ui-sans-serif, system-ui, sans-serif;
 
   --color-border: #D9A15C; /* Assuming border can be primary accent or subtle */
   --color-ring: #D9A15C;

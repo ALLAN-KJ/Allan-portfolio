@@ -68,13 +68,13 @@ export default function Contact() {
       />
 
 
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-6 text-center">
-        <h2 className="contact-heading text-[clamp(3rem,10vw,4rem)] md:text-[8rem] font-black font-heading text-[#EDEDF2] mb-6 tracking-[-0.04em] leading-[0.92]">
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-6 text-center">
+        <h2 className="contact-heading text-[clamp(2.5rem,8vw,5rem)] md:text-[8rem] font-black font-heading text-[#EDEDF2] mb-8 tracking-[-0.04em] leading-[0.92]">
           Let&apos;s<br/>Connect<span className="text-[#D9A15C]">.</span>
         </h2>
         
         <p className="text-base md:text-lg text-[#9A9AA5] mb-16 font-light max-w-lg mx-auto leading-[1.7]">
-          Always open for a chat about cybersecurity, development, or the next big MCU theory.
+          Always open for a chat about cybersecurity, development, or new opportunities.
         </p>
 
         <div className="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-8 mb-24">
@@ -95,7 +95,7 @@ export default function Contact() {
             href="https://linkedin.com/in/allan-k-j-21389838a"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm font-medium tracking-[0.08em] uppercase text-[#9A9AA5] hover:text-[#D9A15C] transition-all duration-300"
+            className="text-sm font-medium tracking-[0.12em] uppercase text-[#9A9AA5] hover:text-[#D9A15C] transition-all duration-300 min-h-[44px] inline-flex items-center focus-visible:text-[#D9A15C] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#D9A15C]/50 rounded-sm"
           >
             LinkedIn
           </a>
@@ -104,7 +104,7 @@ export default function Contact() {
             href="https://github.com/ALLAN-KJ"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm font-medium tracking-[0.08em] uppercase text-[#9A9AA5] hover:text-[#D9A15C] transition-all duration-300"
+            className="text-sm font-medium tracking-[0.12em] uppercase text-[#9A9AA5] hover:text-[#D9A15C] transition-all duration-300 min-h-[44px] inline-flex items-center focus-visible:text-[#D9A15C] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#D9A15C]/50 rounded-sm"
           >
             GitHub
           </a>

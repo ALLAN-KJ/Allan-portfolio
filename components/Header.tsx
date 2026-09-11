@@ -91,7 +91,7 @@ export default function Header() {
               key={link.name} 
               href={link.href} 
               id={`nav-${link.id}`}
-              className="text-[0.7rem] font-medium tracking-[0.12em] uppercase text-[#9A9AA5] hover:text-[#EDEDF2] transition-all p-2 min-h-[44px] inline-flex items-center"
+              className="nav-link glitch-hover text-[0.7rem] font-medium tracking-[0.12em] uppercase text-[#9A9AA5] hover:text-[#EDEDF2] transition-all duration-300 p-2 min-h-[44px] inline-flex items-center focus-visible:text-[#EDEDF2] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#D9A15C]/50 rounded-sm"
             >
               {link.name}
             </Link>
@@ -131,7 +131,7 @@ export default function Header() {
                 href={link.href} 
                 id={`mobile-nav-${link.id}`}
                 onClick={() => setIsOpen(false)}
-                className="text-lg font-medium tracking-[0.1em] uppercase text-[#9A9AA5] hover:text-[#D9A15C] transition-all min-h-[44px] flex items-center justify-center p-4 w-full"
+                className="glitch-hover text-lg font-medium tracking-[0.12em] uppercase text-[#9A9AA5] hover:text-[#D9A15C] transition-all duration-300 min-h-[44px] flex items-center justify-center p-4 w-full focus-visible:text-[#D9A15C] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#D9A15C]/50 rounded-sm"
               >
                 {link.name}
               </Link>

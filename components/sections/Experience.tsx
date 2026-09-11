@@ -62,6 +62,13 @@ export default function Experience() {
           trigger: containerRef.current,
           start: "top 80%",
           toggleActions: "play none none reverse",
+          onEnter: () => {
+            const heading = document.querySelector('.experience-heading');
+            if (heading) {
+              heading.classList.add('glitch-active');
+              setTimeout(() => heading.classList.remove('glitch-active'), 300);
+            }
+          }
         },
         y: 50,
         opacity: 0,
@@ -83,25 +90,28 @@ export default function Experience() {
       role: "IT Security & Networking Intern",
       date: "June–July 2026",
       location: "Coimbatore, India",
+      description: "Interned with the IT security and networking team at a global automotive technology company, gaining hands-on exposure to enterprise networking and cybersecurity operations."
     },
     {
       company: "Qaroo",
-      role: "Full-stack + API Integration Internship",
+      role: "Full-stack & API Integration",
       date: "June 2026",
       location: "Remote",
+      description: "Completed a full-stack development internship, shipping features for a live student LMS platform."
     },
     {
       company: "Conesta Forge",
-      role: "5-day Solo AI Build Sprint",
+      role: "5-Day AI Build Sprint",
       date: "June 2026",
       location: "Remote",
+      description: "Built and shipped 'Tool Finder' solo in 5 days — Forge Score 1,391, ranked #33 on the leaderboard."
     },
   ];
 
   return (
-    <section id="experience" ref={containerRef} className="py-32 w-full bg-[#0A0B0F] relative overflow-hidden">
-      <div className="max-w-5xl mx-auto px-6 relative z-10">
-        <h2 className="experience-heading text-[clamp(2.5rem,8vw,4rem)] md:text-8xl font-black font-heading text-[#EDEDF2] mb-24 tracking-[-0.03em] leading-[0.92]">
+    <section id="experience" ref={containerRef} className="py-48 w-full bg-[#0A0B0F] relative overflow-hidden">
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
+        <h2 className="experience-heading text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] mb-20 tracking-[-0.05em] leading-[0.9]">
           Experience<span className="text-[#D9A15C]">.</span>
         </h2>
 
@@ -121,7 +131,10 @@ export default function Experience() {
                   {exp.date} &bull; {exp.location}
                 </p>
                 <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#EDEDF2] mb-3 tracking-[-0.02em]">{exp.company}</h3>
-                <p className="text-[#9A9AA5] text-base font-light leading-[1.7]">{exp.role}</p>
+                <p className="text-[#EDEDF2] text-lg font-medium leading-[1.7] mb-4">{exp.role}</p>
+                {exp.description && (
+                  <p className="text-[#9A9AA5] text-sm md:text-base font-light leading-[1.7]">{exp.description}</p>
+                )}
               </div>
             </div>
           ))}

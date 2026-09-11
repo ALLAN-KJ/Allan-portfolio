@@ -44,6 +44,43 @@
   .pause-on-hover:hover {
     animation-play-state: paused;
   }
+
+  .nav-link {
+    position: relative;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0.5rem;
+    right: 0.5rem;
+    height: 1px;
+    background-color: #D9A15C;
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.3s ease-out;
+  }
+  .nav-link:hover::after {
+    transform: scaleX(1);
+  }
+
+  .glitch-hover {
+    transition: color 0.2s ease-out;
+  }
+
+  .glitch-hover:hover,
+  .glitch-active {
+    animation: glitch-anim 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  }
+}
+
+@keyframes glitch-anim {
+  0% { text-shadow: 4px 0 #ff0000, -4px 0 #00ffff, 0 0 #D9A15C; }
+  20% { text-shadow: -4px 0 #ff0000, 4px 0 #00ffff, 4px 0 #D9A15C; }
+  40% { text-shadow: 4px 0 #ff0000, -4px 0 #00ffff, -4px 0 #D9A15C; }
+  60% { text-shadow: -4px 0 #ff0000, 4px 0 #00ffff, 0 0 #D9A15C; }
+  80% { text-shadow: 4px 0 #ff0000, -4px 0 #00ffff, 4px 0 #D9A15C; }
+  100% { text-shadow: none; }
 }
 
 @keyframes marquee {
@@ -55,5 +92,11 @@
   .animate-marquee,
   .animate-marquee-reverse {
     animation: none;
+  }
+  
+  .glitch-hover:hover,
+  .glitch-active {
+    animation: none;
+    color: #D9A15C;
   }
 }

@@ -9,9 +9,11 @@ import Projects from "@/components/sections/Projects";
 import Experience from "@/components/sections/Experience";
 import TechStack from "@/components/sections/TechStack";
 import Skills from "@/components/sections/Skills";
+import Certifications from "@/components/sections/Certifications";
 import Competitions from "@/components/sections/Competitions";
 import Contact from "@/components/sections/Contact";
 import Preloader from "@/components/Preloader";
+import Education from "@/components/sections/Education";
 
 export default function Home() {
   const heroRef = useRef<HTMLElement>(null);
@@ -77,7 +79,7 @@ export default function Home() {
                 Allan K J
               </h1>
               <p className="mt-6 md:mt-8 max-w-xl text-base md:text-lg text-[#9A9AA5] leading-[1.7] font-light pointer-events-auto">
-                Cybersecurity student specializing in enterprise IT security, networking, and full-stack development.
+                Second-year Computer Science Engineering student specializing in Cybersecurity, with hands-on experience across enterprise IT security, networking, and full-stack development gained through internships and hackathons. Comfortable working directly with production systems, from gaining hands-on exposure to enterprise networking and cybersecurity operations at ZF Group to shipping a complete web application in a five-day build sprint. Particularly interested in the intersection of system security and practical software development, with a growing foundation in Linux administration, network fundamentals, and applied AI tools.
               </p>
             </div>
             
@@ -89,8 +91,10 @@ export default function Home() {
           <div className="pointer-events-auto relative z-20 w-full bg-[#0A0B0F]">
             <Projects />
             <Experience />
-            <TechStack />
+            <Education />
             <Skills />
+            <Certifications />
+            <TechStack />
             <Competitions />
             <Contact />
           </div>

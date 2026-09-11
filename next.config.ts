@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
   },
   // allowedDevOrigins is for local network dev testing; safe to keep for LAN access
-  allowedDevOrigins: ["10.2.5.79", "192.168.29.112", "192.168.1.9"],
+  allowedDevOrigins: ["10.2.5.79", "192.168.29.112", "192.168.1.9", "10.244.8.236"],
 };
 
 export default nextConfig;

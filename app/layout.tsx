@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 import CustomCursor from "@/components/CustomCursor";
@@ -7,6 +8,17 @@ import CustomCursor from "@/components/CustomCursor";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const clashDisplay = localFont({
+  src: [
+    { path: "../public/fonts/ClashDisplay-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../public/fonts/ClashDisplay-SemiBold.woff2", weight: "600", style: "normal" },
+    { path: "../public/fonts/ClashDisplay-Bold.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-clash",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -37,12 +49,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${inter.variable} h-full antialiased font-sans`}
+      className={`${inter.variable} ${clashDisplay.variable} h-full antialiased font-sans`}
     >
-      <head>
-        <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="anonymous" />
-        <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&display=swap" rel="stylesheet" />
-      </head>
       <body className="min-h-full flex flex-col font-sans overflow-x-hidden">
         <CustomCursor />
         <SmoothScroll>
