@@ -302,10 +302,10 @@ function SceneContent() {
       const initialScale = window.innerWidth < 768 ? 0.5625 : 0.75;
       gsap.set(scrollGroupRef.current!.scale, { x: initialScale, y: initialScale, z: initialScale });
       gsap.set(scrollGroupRef.current!.rotation, { x: 0, y: 0, z: 0 });
-      // 25% higher resting Y (desktop 0→0.5, mobile 1.5→1.875)
+      // 25% higher resting Y (desktop 0.5->1.0, mobile 1.875->2.375)
       gsap.set(scrollGroupRef.current!.position, { 
         x: window.innerWidth < 768 ? 0 : 2, 
-        y: window.innerWidth < 768 ? 1.875 : 0.5, 
+        y: window.innerWidth < 768 ? 2.375 : 1.0, 
         z: 0 
       });
       
@@ -383,7 +383,7 @@ function SceneContent() {
           // Main Rotation, Scale, and Translation
           tl.to(scrollGroupRef.current!.position, {
             x: 3, // Drift right on desktop
-            y: 0.85, // Drift slightly up (higher baseline)
+            y: 1.35, // Drift slightly up (higher baseline)
             z: -1,
             ease: "none",
           }, 0)
@@ -401,7 +401,7 @@ function SceneContent() {
           }, 0);
         } else if (!prefersReducedMotion) {
           // On mobile, stay centered but do the Y flip to show the back face
-          tl.to(scrollGroupRef.current!.position, { y: 1.375 }, 0) // Higher baseline for mobile
+          tl.to(scrollGroupRef.current!.position, { y: 1.875 }, 0) // Higher baseline for mobile
             .to(scrollGroupRef.current!.rotation, {
               x: Math.PI / 12,
               y: Math.PI, // Flip exactly to the back face
