@@ -88,23 +88,23 @@ export default function Experience() {
     {
       company: "ZF Group (ZF Friedrichshafen AG)",
       role: "IT Security & Networking Intern",
-      date: "June–July 2026",
-      location: "Coimbatore, India",
-      description: "Interned with the IT security and networking team at a global automotive technology company, gaining hands-on exposure to enterprise networking and cybersecurity operations."
+      date: "June 2 – July 3, 2026",
+      location: "In-Person | Coimbatore, India",
+      description: "Worked with the IT security and operations team at a global automotive technology company, learning core networking and cybersecurity concepts. Performed yearly password reset maintenance and configured Apple A16 iPads for successful deployment."
+    },
+    {
+      company: "Conesta Forge (powered by Fludigo)",
+      role: "5-Day AI Build Sprint",
+      date: "June 21 – 26, 2026",
+      location: "Remote",
+      description: "Built and shipped 'Tool Finder' solo, from blank idea to live product in five days under a hard deadline. Finished with a Forge Score of 1,391, placing #33 on the program leaderboard."
     },
     {
       company: "Qaroo",
-      role: "Full-stack & API Integration",
-      date: "June 2026",
+      role: "Software Intern",
+      date: "June 1 – 20, 2026",
       location: "Remote",
-      description: "Completed a full-stack development internship, shipping features for a live student LMS platform."
-    },
-    {
-      company: "Conesta Forge",
-      role: "5-Day AI Build Sprint",
-      date: "June 2026",
-      location: "Remote",
-      description: "Built and shipped 'Tool Finder' solo in 5 days — Forge Score 1,391, ranked #33 on the leaderboard."
+      description: "Completed a three-week internship covering the fundamentals of full-stack development and API integration for student platforms."
     },
   ];
 

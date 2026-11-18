@@ -65,11 +65,11 @@ export default function Skills() {
   const skillCategories = [
     {
       title: "Languages",
-      skills: ["Python", "C", "HTML", "CSS", "JavaScript"],
+      skills: ["Python", "C", "Java", "TypeScript", "HTML", "CSS", "JavaScript"],
     },
     {
       title: "APIs & Tools",
-      skills: ["ElevenLabs API", "Git", "VS Code"],
+      skills: ["ElevenLabs API", "Groq API", "Antigravity", "Docker", "Git", "VS Code"],
     },
     {
       title: "Domains",

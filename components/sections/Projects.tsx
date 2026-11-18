@@ -78,6 +78,14 @@ export default function Projects() {
       buttonText: "See the build",
     },
     {
+      title: "Smart India Hackathon (SIH) 2026",
+      category: "Problem Statement 26160",
+      description:
+        "Built and deployed a full-stack solution for SIH 2026 Problem Statement 26160. Deployed frontend on Vercel and backend on Render; live and accessible to all users.",
+      link: "https://sih-2026-frontend-eight.vercel.app",
+      buttonText: "View Live",
+    },
+    {
       title: "Student LMS Platform",
       category: "Full-Stack Web App",
       description:
@@ -89,15 +97,15 @@ export default function Projects() {
       title: "GHOST",
       category: "AI Voice Assistant",
       description:
-        "Built an AI-based voice assistant that responds to human voice commands. Capable of sending WhatsApp messages, opening websites (Google, YouTube Music, YouTube, etc.).",
+        "Building a voice-controlled AI assistant that sends WhatsApp messages and opens websites like Google and YouTube.",
       link: null,
-      buttonText: "Coming Soon",
+      buttonText: "In Progress",
     },
     {
-      title: "Education Platform Theme",
-      category: "Web Development (In Progress)",
+      title: "Education-Themed 3D Website",
+      category: "Interactive 3D Web (In Progress)",
       description:
-        "Currently building a book-shaped, themed website for an education-based platform.",
+        "Designing a book-shaped, themed interactive 3D website for education.",
       link: null,
       buttonText: "In Progress",
     },

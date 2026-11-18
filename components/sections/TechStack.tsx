@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 
-const techRow1 = ["C", "HTML5", "CSS3", "JavaScript", "TypeScript", "React", "Next.js", "Tailwind CSS"];
-const techRow2 = ["Three.js", "GSAP", "Lenis", "Git", "VS Code", "Node.js", "Linux", "Figma"];
+const techRow1 = ["Python", "C", "Java", "TypeScript", "JavaScript", "HTML5", "CSS3", "React", "Next.js", "Tailwind CSS"];
+const techRow2 = ["Docker", "Groq API", "Three.js", "GSAP", "Lenis", "Git", "VS Code", "Node.js", "Linux", "Antigravity"];
 
 export default function TechStack() {
   const [reducedMotion, setReducedMotion] = useState(false);

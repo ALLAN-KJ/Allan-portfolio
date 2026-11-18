@@ -58,6 +58,12 @@ export default function Competitions() {
 
   const competitions = [
     {
+      title: "Smart India Hackathon (SIH) 2026",
+      date: "2026",
+      events: ["National Hackathon — PS 26160"],
+      description: "Built and deployed a full-stack web and backend solution for Problem Statement 26160."
+    },
+    {
       title: "Mindkraft 2026",
       date: "27–28 March 2026",
       events: ["Hashes over Roses 3.0", "Crypto Crime 2.0", "IoT Inferno – The MindKraft Challenge"],
@@ -65,9 +71,15 @@ export default function Competitions() {
     },
     {
       title: "Conesta Forge",
-      date: "2026",
+      date: "June 2026",
       events: ["5-Day AI Build Sprint"],
-      description: "Shipped a working web application solo, finishing #33 on the leaderboard."
+      description: "Shipped a working web application solo under a 5-day deadline, finishing #33 on the leaderboard."
+    },
+    {
+      title: "Hacknex Hackathon",
+      date: "2026",
+      events: ["Hackathon Challenge"],
+      description: "Participated in high-intensity software build and problem-solving competition."
     },
     {
       title: "Aurelion Hackathon",

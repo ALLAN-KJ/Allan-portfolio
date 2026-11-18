@@ -60,7 +60,7 @@ export default function Certifications() {
     {
       title: "Introduction to IoT and Digital Transformation",
       issuer: "Cisco Networking Academy",
-      description: "Covers IoT architecture, connected device ecosystems, and digital transformation strategies in enterprise IT.",
+      description: "Covers IoT architecture, connected device ecosystems, and digital transformation in enterprise IT.",
     },
     {
       title: "Red Hat System Administration I (RH124, Ver. 10)",
@@ -68,9 +68,24 @@ export default function Certifications() {
       description: "Covers Linux CLI, filesystem management, user/group administration, and system services.",
     },
     {
+      title: "Oracle Java Foundations (1Z0-811)",
+      issuer: "Oracle",
+      description: "Covers core Java fundamentals — data types, operators, control structures, arrays, methods, and object-oriented programming (OOP).",
+    },
+    {
       title: "EC-Council Cybersecurity Workshop",
       issuer: "EC-Council",
       description: "Certificate of Participation — 1 CPE credit.",
+    },
+    {
+      title: "AIORI-3 Workshop on Internet Measurements",
+      issuer: "MeitY / NIXI & APNIC Foundation",
+      description: "Certificate of Participation — AIORI-3 Student Workshop on Internet Measurements, Karunya Institute of Technology and Sciences, Sept 8, 2026 (ISEA Initiative).",
+    },
+    {
+      title: "Privacy and Security in Online Social Media",
+      issuer: "NPTEL (IIIT Hyderabad)",
+      description: "12-week NPTEL online certification (Jul–Oct 2026); consolidated score of 67%.",
     },
   ];
 
