@@ -45,13 +45,13 @@ export default function Projects() {
 
     // Desktop & Tablet (>= 768px): Pinned Horizontal Scrub with 1:1 Lenis Harmony
     mm.add("(min-width: 768px)", () => {
-      // Calculate exact distance to glide Card 05 all the way across to the far left margin
+      // Stop scroll when Card 05 is at the far-left margin and the GitHub concluding card is on the right
       const getScrollAmount = () => {
         const cards = track.querySelectorAll(".project-card");
-        if (cards.length > 0) {
-          const lastCard = cards[cards.length - 1] as HTMLElement;
+        if (cards.length >= 2) {
+          const card5 = cards[cards.length - 2] as HTMLElement;
           const firstCard = cards[0] as HTMLElement;
-          return lastCard.offsetLeft - firstCard.offsetLeft;
+          return card5.offsetLeft - firstCard.offsetLeft;
         }
         return track.scrollWidth - window.innerWidth + 140;
       };
@@ -182,7 +182,7 @@ export default function Projects() {
             Projects Showcase
           </span>
           <div className="flex items-center gap-4">
-            <span className="text-[#D9A15C]/80">01 — 05</span>
+            <span className="text-[#D9A15C]/80">01 — 05 + More</span>
             <div className="w-36 h-[2px] bg-white/10 rounded-full overflow-hidden">
               <div
                 ref={progressBarRef}
@@ -242,6 +242,59 @@ export default function Projects() {
               </div>
             </div>
           ))}
+
+          {/* Concluding Card: Explore More on GitHub & Contact */}
+          <div
+            className="project-card group flex-shrink-0 w-[85vw] max-md:max-w-[360px] md:w-[440px] lg:w-[460px] xl:w-[480px] md:max-w-none min-h-[460px] md:h-[480px] lg:h-[500px] snap-center bg-[#0F111A] border border-[#D9A15C]/25 rounded-[1.75rem] p-7 md:p-8 lg:p-9 flex flex-col justify-between hover:border-[#D9A15C]/60 transition-all duration-300 ease-out md:hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(217,161,92,0.18)] shadow-xl cursor-default relative overflow-hidden backdrop-blur-sm"
+          >
+            <div>
+              {/* Card Header: Category Tag & GitHub SVG Link */}
+              <div className="flex items-start justify-between gap-3 mb-5 md:mb-6">
+                <span className="px-3 py-1 rounded-full bg-[#D9A15C]/15 border border-[#D9A15C]/30 text-[#D9A15C] font-medium tracking-[0.1em] uppercase text-[0.65rem] md:text-[0.7rem] transition-transform duration-300 group-hover:translate-x-1">
+                  Open Source & More
+                </span>
+                <a
+                  href="https://github.com/ALLAN-KJ"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-[#EDEDF2] hover:text-[#D9A15C] hover:border-[#D9A15C]/40 transition-colors flex-shrink-0"
+                  aria-label="GitHub Profile"
+                >
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                  </svg>
+                </a>
+              </div>
+
+              {/* Title */}
+              <h3 className="glitch-hover text-2xl md:text-3xl font-bold font-heading text-[#EDEDF2] mb-3 md:mb-4 tracking-[-0.02em] leading-tight transition-transform duration-300 group-hover:translate-x-1 group-hover:text-white">
+                More on GitHub
+              </h3>
+
+              {/* Description */}
+              <p className="text-[#9A9AA5] text-sm leading-[1.7] font-light">
+                Want to explore more source code, experiments, and ongoing builds? Check out all public repositories on GitHub or reach out to collaborate.
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="mt-6 md:mt-8 flex items-center gap-4 flex-wrap">
+              <AnimatedButton
+                href="https://github.com/ALLAN-KJ"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View GitHub
+              </AnimatedButton>
+              <a
+                href="#contact"
+                className="text-xs md:text-sm text-[#9A9AA5] hover:text-[#D9A15C] font-mono tracking-wider uppercase transition-colors inline-flex items-center gap-1.5"
+              >
+                <span>Let&apos;s Talk</span>
+                <span>→</span>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </section>
