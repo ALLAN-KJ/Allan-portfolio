@@ -53,13 +53,7 @@ LinkedIn: linkedin.com/in/allan-k-j-21389838a`,
 };
 
 export default function HeroTerminal() {
-  const [entries, setEntries] = useState<TerminalEntry[]>([
-    {
-      id: "initial-welcome",
-      type: "system",
-      output: "Welcome to allan@portfolio\nType `help` to see available commands.",
-    },
-  ]);
+  const [entries, setEntries] = useState<TerminalEntry[]>([]);
 
   const [inputVal, setInputVal] = useState("");
   const [cmdHistory, setCmdHistory] = useState<string[]>([]);
@@ -213,6 +207,11 @@ export default function HeroTerminal() {
         data-lenis-prevent
         className="flex-1 p-4 sm:p-5 overflow-y-auto text-[#E5E7EB] space-y-3 text-left"
       >
+        {/* Permanent Welcome Message */}
+        <div className="whitespace-pre-wrap font-mono text-left">
+          Welcome to allan@portfolio{"\n"}Type `help` to see available commands.
+        </div>
+
         {entries.map((entry) => (
           <div key={entry.id} className="space-y-1 text-left">
             {entry.type === "command" && (
