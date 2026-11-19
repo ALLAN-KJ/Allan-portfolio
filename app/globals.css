@@ -92,11 +92,9 @@
     overflow: hidden;
   }
 
-  /* Electric Cyan / Dimension Tear Layer */
+  /* Electric Cyan / Dimension Tear Layer - ONLY ON HOVER */
   .spider-glitch:hover::before,
-  .spider-glitch.glitch-active::before,
   .glitch-hover:hover::before,
-  .glitch-hover.glitch-active::before,
   .group:hover .spider-glitch::before,
   .project-card:hover .spider-glitch::before {
     opacity: 1;
@@ -107,11 +105,9 @@
     z-index: 2;
   }
 
-  /* Hot Magenta-Red / Miles Spider Suit Layer */
+  /* Hot Magenta-Red / Miles Spider Suit Layer - ONLY ON HOVER */
   .spider-glitch:hover::after,
-  .spider-glitch.glitch-active::after,
   .glitch-hover:hover::after,
-  .glitch-hover.glitch-active::after,
   .group:hover .spider-glitch::after,
   .project-card:hover .spider-glitch::after {
     opacity: 1;
@@ -122,11 +118,9 @@
     z-index: 3;
   }
 
-  /* Main text vibration with chromatic split & venom electricity */
+  /* Main text vibration with chromatic split & venom electricity - ONLY ON HOVER */
   .spider-glitch:hover,
-  .spider-glitch.glitch-active,
   .glitch-hover:hover,
-  .glitch-hover.glitch-active,
   .group:hover .spider-glitch,
   .project-card:hover .spider-glitch {
     animation: miles-glitch-base 0.25s steps(2, end) infinite;

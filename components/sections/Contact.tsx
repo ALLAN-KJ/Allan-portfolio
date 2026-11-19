@@ -45,20 +45,6 @@ export default function Contact() {
         trigger: containerRef.current,
         start: "top 80%",
         toggleActions: "play none none reverse",
-        onEnter: () => {
-          const heading = document.querySelector('.contact-heading');
-          if (heading) {
-            heading.classList.add('glitch-active');
-            setTimeout(() => heading.classList.remove('glitch-active'), 350);
-          }
-        },
-        onEnterBack: () => {
-          const heading = document.querySelector('.contact-heading');
-          if (heading) {
-            heading.classList.add('glitch-active');
-            setTimeout(() => heading.classList.remove('glitch-active'), 350);
-          }
-        },
       },
       y: 0,
       opacity: 1,

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SplitType from "split-type";
 import AnimatedButton from "../AnimatedButton";
 
 export default function Projects() {
@@ -24,31 +25,28 @@ export default function Projects() {
 
     const mm = gsap.matchMedia();
 
-    // Universal: Safe entrance animation for heading
+    // Universal: Letter-by-letter reveal for heading (shown one by one)
+    let headingSplit: SplitType | null = null;
     if (heading) {
-      gsap.fromTo(
-        heading,
-        { y: 40, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.9,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: heading,
-            start: "top 85%",
-            toggleActions: "play none none reverse",
-            onEnter: () => {
-              heading.classList.add("glitch-active");
-              setTimeout(() => heading.classList.remove("glitch-active"), 350);
+      headingSplit = new SplitType(".projects-heading", { types: "chars" });
+      if (headingSplit.chars) {
+        gsap.fromTo(
+          headingSplit.chars,
+          { y: 50, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.05,
+            duration: 0.8,
+            ease: "power4.out",
+            scrollTrigger: {
+              trigger: heading,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
             },
-            onEnterBack: () => {
-              heading.classList.add("glitch-active");
-              setTimeout(() => heading.classList.remove("glitch-active"), 350);
-            },
-          },
-        }
-      );
+          }
+        );
+      }
     }
 
     // Desktop & Tablet (>= 768px): Pinned Horizontal Scrub with 1:1 Lenis Harmony
@@ -63,8 +61,6 @@ export default function Projects() {
         }
         return track.scrollWidth - window.innerWidth + 140;
       };
-
-      let lastActiveIndex = -1;
 
       // scrub: 0.5 creates buttery-smooth synchronization with Lenis without double-lag
       const horizontalScroll = gsap.to(track, {
@@ -81,23 +77,6 @@ export default function Projects() {
           onUpdate: (self) => {
             if (progressBarRef.current) {
               progressBarRef.current.style.transform = `scaleX(${self.progress})`;
-            }
-
-            // Trigger glitch on active card title as it glides into focus
-            const cards = track.querySelectorAll(".project-card");
-            if (cards.length > 0) {
-              const activeIdx = Math.min(
-                Math.floor(self.progress * (cards.length - 1) + 0.4),
-                cards.length - 1
-              );
-              if (activeIdx !== lastActiveIndex) {
-                lastActiveIndex = activeIdx;
-                const title = cards[activeIdx]?.querySelector("h3");
-                if (title) {
-                  title.classList.add("glitch-active");
-                  setTimeout(() => title.classList.remove("glitch-active"), 350);
-                }
-              }
             }
           },
         },
@@ -132,6 +111,7 @@ export default function Projects() {
 
     return () => {
       mm.revert();
+      headingSplit?.revert();
     };
   }, []);
 

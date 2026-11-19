@@ -1,41 +1,65 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion } from "motion/react";
+import { useEffect, useState, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SplitType from "split-type";
 
 const techRow1 = ["Python", "C", "Java", "TypeScript", "JavaScript", "HTML5", "CSS3", "React", "Next.js", "Tailwind CSS"];
 const techRow2 = ["Docker", "Groq API", "Three.js", "GSAP", "Lenis", "Git", "VS Code", "Node.js", "Linux", "Antigravity"];
 
 export default function TechStack() {
   const [reducedMotion, setReducedMotion] = useState(false);
+  const containerRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(mediaQuery.matches);
     const listener = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
     mediaQuery.addEventListener("change", listener);
-    return () => mediaQuery.removeEventListener("change", listener);
+
+    let headingSplit: SplitType | null = null;
+    if (headingRef.current) {
+      headingSplit = new SplitType(".techstack-heading", { types: "chars" });
+      if (headingSplit.chars) {
+        gsap.fromTo(
+          headingSplit.chars,
+          { y: 50, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            stagger: 0.04,
+            duration: 0.8,
+            ease: "power4.out",
+            scrollTrigger: {
+              trigger: headingRef.current,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      }
+    }
+
+    return () => {
+      mediaQuery.removeEventListener("change", listener);
+      headingSplit?.revert();
+    };
   }, []);
 
   return (
-    <section className="py-48 w-full bg-[#0A0B0F] relative overflow-hidden border-t border-white/5">
+    <section ref={containerRef} className="py-48 w-full bg-[#0A0B0F] relative overflow-hidden border-t border-white/5">
       <div className="max-w-7xl mx-auto px-6 mb-20 text-center md:text-left">
-        <motion.h2 
-          className="spider-glitch text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] tracking-[-0.05em] leading-[0.9]"
+        <h2 
+          ref={headingRef}
+          className="techstack-heading spider-glitch text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] tracking-[-0.05em] leading-[0.9]"
           data-text="Tech Stack & Tools."
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ amount: 0.5 }}
-          onViewportEnter={(e) => {
-             const target = e?.target as HTMLElement | undefined;
-             if(target) {
-                target.classList.add("glitch-active");
-                setTimeout(() => target.classList.remove("glitch-active"), 350);
-             }
-          }}
         >
           Tech Stack {"&"} Tools<span className="text-[#D9A15C]">.</span>
-        </motion.h2>
+        </h2>
       </div>
 
       <div className="relative w-full flex flex-col gap-6 select-none overflow-hidden mask-edges pb-10">

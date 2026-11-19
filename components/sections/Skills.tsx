@@ -40,20 +40,6 @@ export default function Skills() {
           trigger: containerRef.current,
           start: "top 80%",
           toggleActions: "play none none reverse",
-          onEnter: () => {
-            const heading = document.querySelector('.skills-heading');
-            if (heading) {
-              heading.classList.add('glitch-active');
-              setTimeout(() => heading.classList.remove('glitch-active'), 350);
-            }
-          },
-          onEnterBack: () => {
-            const heading = document.querySelector('.skills-heading');
-            if (heading) {
-              heading.classList.add('glitch-active');
-              setTimeout(() => heading.classList.remove('glitch-active'), 350);
-            }
-          }
         },
         y: 50,
         opacity: 0,
