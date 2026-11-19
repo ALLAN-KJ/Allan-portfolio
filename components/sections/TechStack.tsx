@@ -31,7 +31,7 @@ export default function TechStack() {
           {
             y: 0,
             opacity: 1,
-            stagger: 0.04,
+            stagger: 0.05,
             duration: 0.8,
             ease: "power4.out",
             scrollTrigger: {

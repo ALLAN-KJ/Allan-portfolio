@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SplitType from "split-type";
 import HeroTerminal from "@/components/HeroTerminal";
 import Header from "@/components/Header";
 import Projects from "@/components/sections/Projects";
@@ -40,16 +41,34 @@ export default function Home() {
         return;
       }
 
-      // Hero text simple fade in
+      let heroSplit: SplitType | null = null;
+
+      // Hero text & letter-by-letter reveal
       if (heroContentRef.current) {
         gsap.to(heroContentRef.current, {
           opacity: 1,
           y: 0,
-          duration: 1.2,
-          delay: 0.5,
+          duration: 1.0,
+          delay: 0.3,
           pointerEvents: "auto",
           ease: "power3.out",
         });
+
+        heroSplit = new SplitType(".hero-title", { types: "chars" });
+        if (heroSplit.chars) {
+          gsap.fromTo(
+            heroSplit.chars,
+            { y: 40, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              stagger: 0.05,
+              duration: 0.8,
+              delay: 0.4,
+              ease: "power4.out",
+            }
+          );
+        }
       }
 
       // Hero terminal fade in
@@ -63,6 +82,10 @@ export default function Home() {
           ease: "power3.out",
         });
       }
+
+      return () => {
+        heroSplit?.revert();
+      };
     });
 
     return () => mm.revert();
@@ -84,7 +107,7 @@ export default function Home() {
               className="flex flex-col items-center md:items-start justify-center w-full md:w-1/2 opacity-0 translate-y-8 pointer-events-none relative z-10"
             >
               <h1 
-                className="spider-glitch text-5xl font-black font-heading tracking-[-0.04em] text-[#EDEDF2] md:text-7xl xl:text-8xl 2xl:text-9xl drop-shadow-[0_0_20px_rgba(217,161,92,0.15)] pointer-events-auto leading-[0.95] whitespace-nowrap cursor-pointer"
+                className="hero-title spider-glitch text-5xl font-black font-heading tracking-[-0.04em] text-[#EDEDF2] md:text-7xl xl:text-8xl 2xl:text-9xl drop-shadow-[0_0_20px_rgba(217,161,92,0.15)] pointer-events-auto leading-[0.95] whitespace-nowrap cursor-pointer"
                 data-text="Allan K J"
               >
                 Allan K J

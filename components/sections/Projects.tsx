@@ -51,6 +51,25 @@ export default function Projects() {
 
     // Desktop & Tablet (>= 768px): Pinned Horizontal Scrub with 1:1 Lenis Harmony
     mm.add("(min-width: 768px)", () => {
+      // Cards pop-up entrance animation
+      const cards = track.querySelectorAll(".project-card");
+      gsap.fromTo(
+        cards,
+        { y: 60, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.1,
+          duration: 0.8,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: pinWrapper,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+
       // Stop scroll when Card 05 is at the far-left margin and the GitHub concluding card is on the right
       const getScrollAmount = () => {
         const cards = track.querySelectorAll(".project-card");
