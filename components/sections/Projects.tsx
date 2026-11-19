@@ -41,15 +41,14 @@ export default function Projects() {
       );
     }
 
-    // Desktop & Tablet (>= 768px): Pinned Horizontal Scrub with Extended Pacing
+    // Desktop & Tablet (>= 768px): Pinned Horizontal Scrub
     mm.add("(min-width: 768px)", () => {
       const getScrollAmount = () => {
-        return track.scrollWidth - window.innerWidth + 180; // 180px buffer for elegant end breathing room
+        return track.scrollWidth - window.innerWidth + 140; // 140px end buffer
       };
 
-      // Extended scroll travel so wide cards glide with luxurious, deliberate pacing
       const getScrollDistance = () => {
-        return getScrollAmount() * 1.35;
+        return getScrollAmount() * 1.2;
       };
 
       const horizontalScroll = gsap.to(track, {
@@ -60,7 +59,7 @@ export default function Projects() {
           start: "top top",
           end: () => `+=${getScrollDistance()}`,
           pin: true,
-          scrub: 1.2,
+          scrub: 1.1,
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
@@ -183,19 +182,19 @@ export default function Projects() {
         </p>
       </div>
 
-      {/* Horizontal Track: Opening Giant Title Panel + 5 Cinematic Wide Cards */}
+      {/* Horizontal Track: Opening Giant Title Panel + 5 Medium Showcase Cards */}
       <div
         ref={trackRef}
-        className="flex items-center gap-8 md:gap-12 lg:gap-16 px-6 md:px-16 lg:px-24 w-full md:w-max overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none scrollbar-none pb-6 md:pb-0"
+        className="flex items-center gap-8 md:gap-12 lg:gap-14 px-6 md:px-16 lg:px-24 w-full md:w-max overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none scrollbar-none pb-6 md:pb-0"
       >
-        {/* Desktop Opening Panel: Restored Massive Two-Line Typography */}
-        <div className="hidden md:flex flex-shrink-0 w-[70vw] md:w-[50vw] lg:w-[45vw] xl:w-[40vw] flex-col justify-center pr-6 lg:pr-12 select-none">
+        {/* Desktop Opening Panel: Two-Line Typography with Zero Overlap */}
+        <div className="hidden md:flex flex-shrink-0 flex-col justify-center pr-8 lg:pr-14 select-none">
           <div className="text-[#D9A15C] font-mono tracking-[0.2em] uppercase text-xs md:text-sm mb-4">
             Featured Portfolio
           </div>
           <h2
             ref={headingRef}
-            className="projects-heading text-[clamp(4.5rem,8vw,7.5rem)] md:text-[7.5rem] lg:text-[9.5rem] xl:text-[11rem] font-black font-heading text-[#EDEDF2] tracking-[-0.05em] leading-[0.88]"
+            className="projects-heading text-[clamp(4rem,7vw,6.5rem)] lg:text-[7rem] xl:text-[8rem] font-black font-heading text-[#EDEDF2] tracking-[-0.05em] leading-[0.88] whitespace-nowrap"
           >
             Selected<br />Works<span className="text-[#D9A15C]">.</span>
           </h2>
@@ -205,36 +204,36 @@ export default function Projects() {
           </p>
         </div>
 
-        {/* 5 Cinematic Wide Showcase Cards */}
+        {/* 5 Medium-Sized Showcase Cards */}
         {projects.map((project, idx) => (
           <div
             key={idx}
-            className="project-card group flex-shrink-0 w-[85vw] max-w-[360px] md:w-[68vw] md:max-w-[820px] lg:w-[65vw] lg:max-w-[880px] min-h-[480px] md:h-[530px] lg:h-[550px] snap-center bg-[#0F111A] border border-[#D9A15C]/15 rounded-[2rem] p-7 md:p-12 lg:p-14 flex flex-col justify-between hover:border-[#D9A15C]/50 transition-all duration-500 ease-out md:hover:-translate-y-2 hover:shadow-[0_0_50px_rgba(217,161,92,0.14)] shadow-xl cursor-default relative overflow-hidden backdrop-blur-sm"
+            className="project-card group flex-shrink-0 w-[85vw] max-w-[340px] md:w-[450px] lg:w-[480px] xl:w-[500px] min-h-[440px] md:h-[470px] lg:h-[490px] snap-center bg-[#0F111A] border border-[#D9A15C]/15 rounded-[1.75rem] p-7 md:p-8 lg:p-9 flex flex-col justify-between hover:border-[#D9A15C]/50 transition-all duration-300 ease-out md:hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(217,161,92,0.12)] shadow-xl cursor-default relative overflow-hidden backdrop-blur-sm"
           >
             <div>
-              {/* Card Header: Category Tag & Large Index Counter */}
-              <div className="flex items-center justify-between mb-6 md:mb-8">
-                <span className="px-3.5 py-1.5 rounded-full bg-[#D9A15C]/10 border border-[#D9A15C]/20 text-[#D9A15C] font-medium tracking-[0.12em] uppercase text-[0.7rem] md:text-xs transition-transform duration-500 group-hover:translate-x-1">
+              {/* Card Header: Category Tag & Index Counter */}
+              <div className="flex items-center justify-between mb-5">
+                <span className="px-3 py-1 rounded-full bg-[#D9A15C]/10 border border-[#D9A15C]/20 text-[#D9A15C] font-medium tracking-[0.12em] uppercase text-[0.7rem] md:text-xs transition-transform duration-300 group-hover:translate-x-1">
                   {project.category}
                 </span>
-                <span className="text-2xl md:text-4xl font-heading font-black text-white/20 group-hover:text-[#D9A15C]/70 transition-colors duration-500">
+                <span className="text-xl md:text-2xl font-heading font-black text-white/20 group-hover:text-[#D9A15C]/70 transition-colors duration-300">
                   0{idx + 1}
                 </span>
               </div>
 
               {/* Title */}
-              <h3 className="glitch-hover text-2xl md:text-4xl lg:text-5xl font-bold font-heading text-[#EDEDF2] mb-5 md:mb-6 tracking-[-0.03em] leading-[1.1] transition-transform duration-500 group-hover:translate-x-1 group-hover:text-white">
+              <h3 className="glitch-hover text-2xl md:text-3xl font-bold font-heading text-[#EDEDF2] mb-4 tracking-[-0.02em] leading-tight transition-transform duration-300 group-hover:translate-x-1 group-hover:text-white">
                 {project.title}
               </h3>
 
               {/* Description */}
-              <p className="text-[#9A9AA5] text-sm md:text-base lg:text-lg leading-[1.75] font-light max-w-2xl">
+              <p className="text-[#9A9AA5] text-sm md:text-base leading-[1.7] font-light">
                 {project.description}
               </p>
             </div>
 
             {/* Action Button */}
-            <div className="mt-8 transition-transform duration-500 group-hover:translate-y-[-4px]">
+            <div className="mt-6 transition-transform duration-300 group-hover:translate-y-[-2px]">
               {project.link ? (
                 <AnimatedButton
                   href={project.link}
@@ -244,7 +243,7 @@ export default function Projects() {
                   {project.buttonText}
                 </AnimatedButton>
               ) : (
-                <div className="px-6 py-3 rounded-full border border-white/10 text-[#9A9AA5] inline-flex items-center text-xs md:text-sm font-medium cursor-not-allowed uppercase tracking-[0.12em] min-h-[44px]">
+                <div className="px-5 py-2.5 rounded-full border border-white/10 text-[#9A9AA5] inline-flex items-center text-xs md:text-sm font-medium cursor-not-allowed uppercase tracking-[0.12em] min-h-[40px]">
                   {project.buttonText}
                 </div>
               )}
