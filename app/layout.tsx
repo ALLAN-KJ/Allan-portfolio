@@ -23,36 +23,48 @@ const clashDisplay = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://allan-kj.github.io/Allan-portfolio"),
-  title: "Allan K.J (Allan K J) — Cybersecurity & Full-Stack Developer",
+  applicationName: "Allan K.J",
+  title: "Allan K.J — Cybersecurity Specialist & Creative 3D Engineer",
   description:
-    "Official portfolio of Allan K.J (Allan K J) — B.Tech CSE (Cybersecurity) student at Karunya Institute of Technology and Sciences, specializing in enterprise IT security, networking, and full-stack development.",
+    "Official interactive 3D portfolio of Allan K.J — Cybersecurity specialist and creative developer. Explore real-time WebGL experiences, IPsec VPN security research, and full-stack software engineering.",
   keywords: [
     "Allan K.J",
     "Allan K J",
     "Allan KJ",
-    "Allan K. J.",
     "Allan Karunya",
     "Allan Cybersecurity",
     "Full-Stack Developer",
+    "Creative Developer",
     "Allan portfolio",
+    "IPsec Sentinel",
   ],
   authors: [{ name: "Allan K.J", url: "https://allan-kj.github.io/Allan-portfolio/" }],
   alternates: {
     canonical: "https://allan-kj.github.io/Allan-portfolio/",
   },
+  icons: {
+    icon: [
+      { url: "/Allan-portfolio/favicon.svg", type: "image/svg+xml" },
+      { url: "/Allan-portfolio/icon-48.png", sizes: "48x48", type: "image/png" },
+      { url: "/Allan-portfolio/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [
+      { url: "/Allan-portfolio/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
   openGraph: {
-    title: "Allan K.J — Cybersecurity & Full-Stack Developer",
+    title: "Allan K.J — Cybersecurity Specialist & Creative 3D Engineer",
     description:
-      "Official portfolio of Allan K.J (Allan K J) — B.Tech CSE (Cybersecurity) student at Karunya Institute of Technology and Sciences.",
+      "Official interactive 3D portfolio of Allan K.J — Cybersecurity specialist and creative developer. Featuring real-time WebGL 3D scenes and security research.",
     url: "https://allan-kj.github.io/Allan-portfolio/",
-    siteName: "Allan K.J Portfolio",
+    siteName: "Allan K.J",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Allan K.J — Cybersecurity & Full-Stack Developer",
+    title: "Allan K.J — Cybersecurity Specialist & Creative 3D Engineer",
     description:
-      "Official portfolio of Allan K.J — B.Tech CSE (Cybersecurity) student, open to internships.",
+      "Official interactive 3D portfolio of Allan K.J — Cybersecurity specialist and creative developer.",
   },
   robots: {
     index: true,
@@ -76,13 +88,21 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Allan K.J",
+  alternateName: ["Allan K.J Portfolio", "Allan Portfolio", "Allan KJ"],
+  url: "https://allan-kj.github.io/Allan-portfolio/",
+};
+
 const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Allan K J",
   alternateName: ["Allan K.J", "Allan K. J.", "Allan KJ"],
   url: "https://allan-kj.github.io/Allan-portfolio/",
-  jobTitle: "Cybersecurity & Full-Stack Developer",
+  jobTitle: "Cybersecurity Specialist & Full-Stack Developer",
   alumniOf: {
     "@type": "CollegeOrUniversity",
     name: "Karunya Institute of Technology and Sciences",
@@ -100,6 +120,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={`${inter.variable} ${clashDisplay.variable} h-full antialiased font-sans`}
     >
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
