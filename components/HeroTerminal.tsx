@@ -203,7 +203,7 @@ export default function HeroTerminal() {
         </div>
         {/* Right: Window title */}
         <div className="text-[11px] sm:text-xs text-[#6B7280] tracking-tight truncate pl-2">
-          allan@portfolio — bash — 80×24
+          allan@portfolio — bash
         </div>
       </div>
 
