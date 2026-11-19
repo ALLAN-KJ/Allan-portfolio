@@ -63,6 +63,21 @@ export default function Home() {
           ease: "power3.out",
         });
       }
+
+      // Smooth fade out of Hero as Projects enters to ensure clean full-viewport takeover
+      if (heroRef.current) {
+        gsap.to(heroRef.current, {
+          opacity: 0,
+          y: -30,
+          ease: "none",
+          scrollTrigger: {
+            trigger: "#projects",
+            start: "top 95%",
+            end: "top 10%",
+            scrub: true,
+          },
+        });
+      }
     });
 
     return () => mm.revert();
