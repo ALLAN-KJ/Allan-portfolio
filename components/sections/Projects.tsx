@@ -38,6 +38,14 @@ export default function Projects() {
             trigger: heading,
             start: "top 85%",
             toggleActions: "play none none reverse",
+            onEnter: () => {
+              heading.classList.add("glitch-active");
+              setTimeout(() => heading.classList.remove("glitch-active"), 350);
+            },
+            onEnterBack: () => {
+              heading.classList.add("glitch-active");
+              setTimeout(() => heading.classList.remove("glitch-active"), 350);
+            },
           },
         }
       );
@@ -56,6 +64,8 @@ export default function Projects() {
         return track.scrollWidth - window.innerWidth + 140;
       };
 
+      let lastActiveIndex = -1;
+
       // scrub: 0.5 creates buttery-smooth synchronization with Lenis without double-lag
       const horizontalScroll = gsap.to(track, {
         x: () => -getScrollAmount(),
@@ -71,6 +81,23 @@ export default function Projects() {
           onUpdate: (self) => {
             if (progressBarRef.current) {
               progressBarRef.current.style.transform = `scaleX(${self.progress})`;
+            }
+
+            // Trigger glitch on active card title as it glides into focus
+            const cards = track.querySelectorAll(".project-card");
+            if (cards.length > 0) {
+              const activeIdx = Math.min(
+                Math.floor(self.progress * (cards.length - 1) + 0.4),
+                cards.length - 1
+              );
+              if (activeIdx !== lastActiveIndex) {
+                lastActiveIndex = activeIdx;
+                const title = cards[activeIdx]?.querySelector("h3");
+                if (title) {
+                  title.classList.add("glitch-active");
+                  setTimeout(() => title.classList.remove("glitch-active"), 350);
+                }
+              }
             }
           },
         },
@@ -161,7 +188,7 @@ export default function Projects() {
       <div className="w-full max-w-7xl mx-auto px-6 lg:px-8 pt-32 pb-16 md:pt-40 md:pb-24 text-center md:text-left">
         <h2
           ref={headingRef}
-          className="projects-heading text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] tracking-[-0.05em] leading-[0.9]"
+          className="projects-heading glitch-hover text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] tracking-[-0.05em] leading-[0.9]"
         >
           Selected<br className="hidden md:block" /> Works<span className="text-[#D9A15C]">.</span>
         </h2>
@@ -195,12 +222,16 @@ export default function Projects() {
         {/* Horizontal Track: Vertical Showcase Cards matching requested size (~400px–420px) */}
         <div
           ref={trackRef}
-          className="flex items-center gap-6 md:gap-8 lg:gap-10 px-6 md:px-16 lg:px-24 w-full md:w-max overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none scrollbar-none pb-6 md:pb-0"
+          style={{
+            paddingLeft: "max(1.5rem, calc((100vw - 80rem) / 2 + 2rem))",
+            paddingRight: "max(1.5rem, calc((100vw - 80rem) / 2 + 2rem))",
+          }}
+          className="gpu-accel flex items-center gap-6 md:gap-8 lg:gap-10 w-full md:w-max overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none scrollbar-none pb-6 md:pb-0"
         >
           {projects.map((project, idx) => (
             <div
               key={idx}
-              className="project-card group flex-shrink-0 w-[85vw] max-md:max-w-[360px] md:w-[440px] lg:w-[460px] xl:w-[480px] md:max-w-none min-h-[460px] md:h-[480px] lg:h-[500px] snap-center bg-[#0F111A] border border-[#D9A15C]/15 rounded-[1.75rem] p-7 md:p-8 lg:p-9 flex flex-col justify-between hover:border-[#D9A15C]/50 transition-all duration-300 ease-out md:hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(217,161,92,0.12)] shadow-xl cursor-default relative overflow-hidden backdrop-blur-sm"
+              className="project-card gpu-accel group flex-shrink-0 w-[85vw] max-md:max-w-[360px] md:w-[440px] lg:w-[460px] xl:w-[480px] md:max-w-none min-h-[460px] md:h-[480px] lg:h-[500px] snap-center bg-[#0F111A] border border-[#D9A15C]/15 rounded-[1.75rem] p-7 md:p-8 lg:p-9 flex flex-col justify-between hover:border-[#D9A15C]/50 transition-all duration-300 ease-out md:hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(217,161,92,0.12)] shadow-xl cursor-default relative overflow-hidden backdrop-blur-sm"
             >
               <div>
                 {/* Card Header: Category Tag & Large Index Counter */}
@@ -245,7 +276,7 @@ export default function Projects() {
 
           {/* Concluding Card: Explore More on GitHub & Contact */}
           <div
-            className="project-card group flex-shrink-0 w-[85vw] max-md:max-w-[360px] md:w-[440px] lg:w-[460px] xl:w-[480px] md:max-w-none min-h-[460px] md:h-[480px] lg:h-[500px] snap-center bg-[#0F111A] border border-[#D9A15C]/25 rounded-[1.75rem] p-7 md:p-8 lg:p-9 flex flex-col justify-between hover:border-[#D9A15C]/60 transition-all duration-300 ease-out md:hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(217,161,92,0.18)] shadow-xl cursor-default relative overflow-hidden backdrop-blur-sm"
+            className="project-card gpu-accel group flex-shrink-0 w-[85vw] max-md:max-w-[360px] md:w-[440px] lg:w-[460px] xl:w-[480px] md:max-w-none min-h-[460px] md:h-[480px] lg:h-[500px] snap-center bg-[#0F111A] border border-[#D9A15C]/25 rounded-[1.75rem] p-7 md:p-8 lg:p-9 flex flex-col justify-between hover:border-[#D9A15C]/60 transition-all duration-300 ease-out md:hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(217,161,92,0.18)] shadow-xl cursor-default relative overflow-hidden backdrop-blur-sm"
           >
             <div>
               {/* Card Header: Category Tag & GitHub SVG Link */}

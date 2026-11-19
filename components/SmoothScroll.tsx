@@ -27,7 +27,8 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
     };
 
     gsap.ticker.add(rafHandler);
-    gsap.ticker.lagSmoothing(0);
+    // Smooth out any momentary frame-rate hiccups for constant 60fps scroll
+    gsap.ticker.lagSmoothing(500, 33);
 
     return () => {
       gsap.ticker.remove(rafHandler);

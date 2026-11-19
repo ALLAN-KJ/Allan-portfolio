@@ -66,7 +66,14 @@ export default function Experience() {
             const heading = document.querySelector('.experience-heading');
             if (heading) {
               heading.classList.add('glitch-active');
-              setTimeout(() => heading.classList.remove('glitch-active'), 300);
+              setTimeout(() => heading.classList.remove('glitch-active'), 350);
+            }
+          },
+          onEnterBack: () => {
+            const heading = document.querySelector('.experience-heading');
+            if (heading) {
+              heading.classList.add('glitch-active');
+              setTimeout(() => heading.classList.remove('glitch-active'), 350);
             }
           }
         },
@@ -111,7 +118,7 @@ export default function Experience() {
   return (
     <section id="experience" ref={containerRef} className="py-48 w-full bg-[#0A0B0F] relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-6 relative z-10">
-        <h2 className="experience-heading text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] mb-20 tracking-[-0.05em] leading-[0.9]">
+        <h2 className="experience-heading glitch-hover text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] mb-20 tracking-[-0.05em] leading-[0.9]">
           Experience<span className="text-[#D9A15C]">.</span>
         </h2>
 

@@ -21,15 +21,15 @@ export default function TechStack() {
     <section className="py-48 w-full bg-[#0A0B0F] relative overflow-hidden border-t border-white/5">
       <div className="max-w-7xl mx-auto px-6 mb-20 text-center md:text-left">
         <motion.h2 
-          className="text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] tracking-[-0.05em] leading-[0.9]"
+          className="glitch-hover text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] tracking-[-0.05em] leading-[0.9]"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
+          viewport={{ amount: 0.5 }}
           onViewportEnter={(e) => {
              const target = e?.target as HTMLElement | undefined;
              if(target) {
                 target.classList.add("glitch-active");
-                setTimeout(() => target.classList.remove("glitch-active"), 300);
+                setTimeout(() => target.classList.remove("glitch-active"), 350);
              }
           }}
         >

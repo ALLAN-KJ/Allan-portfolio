@@ -41,6 +41,20 @@ export default function Certifications() {
           trigger: containerRef.current,
           start: "top 80%",
           toggleActions: "play none none reverse",
+          onEnter: () => {
+            const heading = document.querySelector('.certifications-heading');
+            if (heading) {
+              heading.classList.add('glitch-active');
+              setTimeout(() => heading.classList.remove('glitch-active'), 350);
+            }
+          },
+          onEnterBack: () => {
+            const heading = document.querySelector('.certifications-heading');
+            if (heading) {
+              heading.classList.add('glitch-active');
+              setTimeout(() => heading.classList.remove('glitch-active'), 350);
+            }
+          }
         },
         y: 50,
         opacity: 0,
@@ -92,7 +106,7 @@ export default function Certifications() {
   return (
     <section id="certifications" ref={containerRef} className="py-32 w-full bg-[#0A0B0F] overflow-hidden relative border-t border-white/5">
       <div className="max-w-6xl mx-auto px-6">
-        <h2 className="certifications-heading text-[clamp(2.5rem,8vw,5rem)] font-black font-heading text-[#EDEDF2] mb-20 text-center tracking-[-0.03em] leading-[0.92]">
+        <h2 className="certifications-heading glitch-hover text-[clamp(2.5rem,8vw,5rem)] font-black font-heading text-[#EDEDF2] mb-20 text-center tracking-[-0.03em] leading-[0.92]">
           Certifications<span className="text-[#D9A15C]">.</span>
         </h2>
 

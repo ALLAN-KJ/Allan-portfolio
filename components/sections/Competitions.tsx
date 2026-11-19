@@ -41,6 +41,20 @@ export default function Competitions() {
           trigger: containerRef.current,
           start: "top 80%",
           toggleActions: "play none none reverse",
+          onEnter: () => {
+            const heading = document.querySelector('.competitions-heading');
+            if (heading) {
+              heading.classList.add('glitch-active');
+              setTimeout(() => heading.classList.remove('glitch-active'), 350);
+            }
+          },
+          onEnterBack: () => {
+            const heading = document.querySelector('.competitions-heading');
+            if (heading) {
+              heading.classList.add('glitch-active');
+              setTimeout(() => heading.classList.remove('glitch-active'), 350);
+            }
+          }
         },
         y: 50,
         opacity: 0,
@@ -92,7 +106,7 @@ export default function Competitions() {
   return (
     <section id="competitions" ref={containerRef} className="py-32 w-full bg-[#0A0B0F] overflow-hidden relative">
       <div className="max-w-6xl mx-auto px-6">
-        <h2 className="competitions-heading text-[clamp(2.5rem,8vw,5rem)] font-black font-heading text-[#EDEDF2] mb-20 text-center tracking-[-0.03em] leading-[0.92]">
+        <h2 className="competitions-heading glitch-hover text-[clamp(2.5rem,8vw,5rem)] font-black font-heading text-[#EDEDF2] mb-20 text-center tracking-[-0.03em] leading-[0.92]">
           Competitions<span className="text-[#D9A15C]">.</span>
         </h2>
 

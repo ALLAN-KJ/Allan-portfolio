@@ -44,7 +44,14 @@ export default function Skills() {
             const heading = document.querySelector('.skills-heading');
             if (heading) {
               heading.classList.add('glitch-active');
-              setTimeout(() => heading.classList.remove('glitch-active'), 300);
+              setTimeout(() => heading.classList.remove('glitch-active'), 350);
+            }
+          },
+          onEnterBack: () => {
+            const heading = document.querySelector('.skills-heading');
+            if (heading) {
+              heading.classList.add('glitch-active');
+              setTimeout(() => heading.classList.remove('glitch-active'), 350);
             }
           }
         },
@@ -80,7 +87,7 @@ export default function Skills() {
   return (
     <section id="skills" ref={containerRef} className="py-48 w-full bg-[#0C0D12] border-t border-white/5 relative">
       <div className="max-w-6xl mx-auto px-6">
-        <h2 className="skills-heading text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] mb-20 text-center tracking-[-0.05em] leading-[0.9]">
+        <h2 className="skills-heading glitch-hover text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] mb-20 text-center tracking-[-0.05em] leading-[0.9]">
           Skills<span className="text-[#D9A15C]">.</span>
         </h2>
 

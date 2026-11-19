@@ -66,7 +66,14 @@ export default function Education() {
             const heading = document.querySelector('.education-heading');
             if (heading) {
               heading.classList.add('glitch-active');
-              setTimeout(() => heading.classList.remove('glitch-active'), 300);
+              setTimeout(() => heading.classList.remove('glitch-active'), 350);
+            }
+          },
+          onEnterBack: () => {
+            const heading = document.querySelector('.education-heading');
+            if (heading) {
+              heading.classList.add('glitch-active');
+              setTimeout(() => heading.classList.remove('glitch-active'), 350);
             }
           }
         },
@@ -97,7 +104,7 @@ export default function Education() {
   return (
     <section id="education" ref={containerRef} className="py-48 w-full bg-[#0C0D12] relative overflow-hidden border-t border-white/5">
       <div className="max-w-6xl mx-auto px-6 relative z-10">
-        <h2 className="education-heading text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] mb-20 tracking-[-0.05em] leading-[0.9]">
+        <h2 className="education-heading glitch-hover text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] mb-20 tracking-[-0.05em] leading-[0.9]">
           Education<span className="text-[#D9A15C]">.</span>
         </h2>
 

@@ -45,6 +45,20 @@ export default function Contact() {
         trigger: containerRef.current,
         start: "top 80%",
         toggleActions: "play none none reverse",
+        onEnter: () => {
+          const heading = document.querySelector('.contact-heading');
+          if (heading) {
+            heading.classList.add('glitch-active');
+            setTimeout(() => heading.classList.remove('glitch-active'), 350);
+          }
+        },
+        onEnterBack: () => {
+          const heading = document.querySelector('.contact-heading');
+          if (heading) {
+            heading.classList.add('glitch-active');
+            setTimeout(() => heading.classList.remove('glitch-active'), 350);
+          }
+        },
       },
       y: 0,
       opacity: 1,
@@ -69,7 +83,7 @@ export default function Contact() {
 
 
       <div className="relative z-10 w-full max-w-6xl mx-auto px-6 text-center">
-        <h2 className="contact-heading text-[clamp(2.5rem,8vw,5rem)] md:text-[8rem] font-black font-heading text-[#EDEDF2] mb-8 tracking-[-0.04em] leading-[0.92]">
+        <h2 className="contact-heading glitch-hover text-[clamp(2.5rem,8vw,5rem)] md:text-[8rem] font-black font-heading text-[#EDEDF2] mb-8 tracking-[-0.04em] leading-[0.92]">
           Let&apos;s<br/>Connect<span className="text-[#D9A15C]">.</span>
         </h2>
         
