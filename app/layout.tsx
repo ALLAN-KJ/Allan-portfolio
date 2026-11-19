@@ -22,20 +22,48 @@ const clashDisplay = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Allan K J — Cybersecurity & Full-Stack Developer",
+  metadataBase: new URL("https://allan-kj.github.io/Allan-portfolio"),
+  title: "Allan K.J (Allan K J) — Cybersecurity & Full-Stack Developer",
   description:
-    "Portfolio of Allan K J — B.Tech CSE (Cybersecurity) student at Karunya Institute of Technology and Sciences, specializing in enterprise IT security, networking, and full-stack development.",
+    "Official portfolio of Allan K.J (Allan K J) — B.Tech CSE (Cybersecurity) student at Karunya Institute of Technology and Sciences, specializing in enterprise IT security, networking, and full-stack development.",
+  keywords: [
+    "Allan K.J",
+    "Allan K J",
+    "Allan KJ",
+    "Allan K. J.",
+    "Allan Karunya",
+    "Allan Cybersecurity",
+    "Full-Stack Developer",
+    "Allan portfolio",
+  ],
+  authors: [{ name: "Allan K.J", url: "https://allan-kj.github.io/Allan-portfolio/" }],
+  alternates: {
+    canonical: "https://allan-kj.github.io/Allan-portfolio/",
+  },
   openGraph: {
-    title: "Allan K J — Cybersecurity & Full-Stack Developer",
+    title: "Allan K.J — Cybersecurity & Full-Stack Developer",
     description:
-      "Portfolio of Allan K J — B.Tech CSE (Cybersecurity) student at Karunya Institute of Technology and Sciences, open to internships in security and software development.",
+      "Official portfolio of Allan K.J (Allan K J) — B.Tech CSE (Cybersecurity) student at Karunya Institute of Technology and Sciences.",
+    url: "https://allan-kj.github.io/Allan-portfolio/",
+    siteName: "Allan K.J Portfolio",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Allan K J — Cybersecurity & Full-Stack Developer",
+    title: "Allan K.J — Cybersecurity & Full-Stack Developer",
     description:
-      "Portfolio of Allan K J — B.Tech CSE (Cybersecurity) student, open to internships.",
+      "Official portfolio of Allan K.J — B.Tech CSE (Cybersecurity) student, open to internships.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
@@ -45,12 +73,35 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Allan K J",
+  alternateName: ["Allan K.J", "Allan K. J.", "Allan KJ"],
+  url: "https://allan-kj.github.io/Allan-portfolio/",
+  jobTitle: "Cybersecurity & Full-Stack Developer",
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "Karunya Institute of Technology and Sciences",
+  },
+  sameAs: [
+    "https://github.com/ALLAN-KJ",
+    "https://linkedin.com/in/allan-k-j-21389838a",
+  ],
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
       className={`${inter.variable} ${clashDisplay.variable} h-full antialiased font-sans`}
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
+      </head>
       <body className="min-h-full flex flex-col font-sans overflow-x-hidden">
         <CustomCursor />
         <SmoothScroll>
