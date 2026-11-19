@@ -26,11 +26,11 @@ export default function Projects() {
     if (heading) {
       gsap.fromTo(
         heading,
-        { y: 35, opacity: 0 },
+        { y: 30, opacity: 0 },
         {
           y: 0,
           opacity: 1,
-          duration: 0.9,
+          duration: 0.8,
           ease: "power3.out",
           scrollTrigger: {
             trigger: container,
@@ -44,11 +44,11 @@ export default function Projects() {
     // Desktop & Tablet (>= 768px): Pinned Horizontal Scrub
     mm.add("(min-width: 768px)", () => {
       const getScrollAmount = () => {
-        return track.scrollWidth - window.innerWidth + 140; // 140px end buffer
+        return track.scrollWidth - window.innerWidth + 140; // 140px buffer
       };
 
       const getScrollDistance = () => {
-        return getScrollAmount() * 1.2;
+        return getScrollAmount() * 1.25;
       };
 
       const horizontalScroll = gsap.to(track, {
@@ -149,16 +149,33 @@ export default function Projects() {
     <section
       id="projects"
       ref={containerRef}
-      className="w-full relative bg-[#0C0D12] z-[30] overflow-hidden py-24 md:py-0 md:min-h-screen md:h-screen md:flex md:flex-col md:justify-center"
+      className="w-full relative bg-[#0C0D12] z-[30] overflow-hidden py-20 md:py-0 md:min-h-screen md:h-screen md:flex md:flex-col md:justify-center"
     >
-      {/* Top Bar with Section Tag & Progress Bar (Desktop >= 768px) */}
-      <div className="hidden md:flex absolute top-8 left-12 right-12 lg:left-24 lg:right-24 z-40 items-center justify-between text-xs font-mono tracking-widest text-[#9A9AA5]/70 uppercase select-none pointer-events-none">
-        <span className="flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#D9A15C] animate-pulse" />
-          Projects Showcase
-        </span>
-        <div className="flex items-center gap-4">
-          <span className="text-[#D9A15C]/80">01 — 05</span>
+      {/* Top Section Header: Pinned separately above the cards */}
+      <div className="w-full max-w-7xl mx-auto px-6 md:px-16 lg:px-24 mb-6 md:mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <div className="text-[#D9A15C] font-mono tracking-[0.2em] uppercase text-xs mb-2">
+            Featured Portfolio
+          </div>
+          <h2
+            ref={headingRef}
+            className="projects-heading text-[clamp(2.5rem,6vw,4.5rem)] md:text-[4rem] lg:text-[5rem] font-black font-heading text-[#EDEDF2] tracking-[-0.05em] leading-[0.9] whitespace-nowrap"
+          >
+            Selected Works<span className="text-[#D9A15C]">.</span>
+          </h2>
+          <p className="mt-2 text-xs md:text-sm text-[#9A9AA5] tracking-widest uppercase font-mono hidden md:block">
+            Scroll down to explore horizontally →
+          </p>
+          <p className="mt-2 text-xs text-[#9A9AA5] tracking-wider uppercase font-mono md:hidden">
+            Swipe sideways to explore →
+          </p>
+        </div>
+
+        {/* Desktop Progress Bar & Counter */}
+        <div className="hidden md:flex items-center gap-4 mb-2">
+          <span className="text-xs font-mono text-[#D9A15C]/80 tracking-widest uppercase">
+            01 — 05
+          </span>
           <div className="w-36 h-[2px] bg-white/10 rounded-full overflow-hidden">
             <div
               ref={progressBarRef}
@@ -168,72 +185,40 @@ export default function Projects() {
         </div>
       </div>
 
-      {/* Mobile-Only Section Header (< 768px) */}
-      <div className="md:hidden w-full px-6 mb-8 text-left">
-        <div className="text-[#D9A15C] font-mono tracking-[0.2em] uppercase text-xs mb-3">
-          Featured Portfolio
-        </div>
-        <h2 className="projects-heading text-[clamp(3.5rem,12vw,5.5rem)] font-black font-heading text-[#EDEDF2] tracking-[-0.05em] leading-[0.88]">
-          Selected<br />Works<span className="text-[#D9A15C]">.</span>
-        </h2>
-        <p className="mt-3 text-xs text-[#9A9AA5] tracking-wider uppercase font-mono flex items-center gap-2">
-          <span>Swipe sideways to explore</span>
-          <span className="text-[#D9A15C]">→</span>
-        </p>
-      </div>
-
-      {/* Horizontal Track: Opening Giant Title Panel + 5 Medium Showcase Cards */}
+      {/* Horizontal Track: Project cards only with +50% breadth (~720px width) */}
       <div
         ref={trackRef}
-        className="flex items-center gap-8 md:gap-12 lg:gap-14 px-6 md:px-16 lg:px-24 w-full md:w-max overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none scrollbar-none pb-6 md:pb-0"
+        className="flex items-center gap-8 md:gap-10 lg:gap-12 px-6 md:px-16 lg:px-24 w-full md:w-max overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none scrollbar-none pb-6 md:pb-0"
       >
-        {/* Desktop Opening Panel: Two-Line Typography with Zero Overlap */}
-        <div className="hidden md:flex flex-shrink-0 flex-col justify-center pr-8 lg:pr-14 select-none">
-          <div className="text-[#D9A15C] font-mono tracking-[0.2em] uppercase text-xs md:text-sm mb-4">
-            Featured Portfolio
-          </div>
-          <h2
-            ref={headingRef}
-            className="projects-heading text-[clamp(4rem,7vw,6.5rem)] lg:text-[7rem] xl:text-[8rem] font-black font-heading text-[#EDEDF2] tracking-[-0.05em] leading-[0.88] whitespace-nowrap"
-          >
-            Selected<br />Works<span className="text-[#D9A15C]">.</span>
-          </h2>
-          <p className="mt-8 text-xs md:text-sm text-[#9A9AA5] tracking-widest uppercase font-mono flex items-center gap-3">
-            <span>Scroll down to explore</span>
-            <span className="text-[#D9A15C] animate-pulse">→</span>
-          </p>
-        </div>
-
-        {/* 5 Medium-Sized Showcase Cards */}
         {projects.map((project, idx) => (
           <div
             key={idx}
-            className="project-card group flex-shrink-0 w-[85vw] max-w-[340px] md:w-[450px] lg:w-[480px] xl:w-[500px] min-h-[440px] md:h-[470px] lg:h-[490px] snap-center bg-[#0F111A] border border-[#D9A15C]/15 rounded-[1.75rem] p-7 md:p-8 lg:p-9 flex flex-col justify-between hover:border-[#D9A15C]/50 transition-all duration-300 ease-out md:hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(217,161,92,0.12)] shadow-xl cursor-default relative overflow-hidden backdrop-blur-sm"
+            className="project-card group flex-shrink-0 w-[88vw] max-w-[380px] md:w-[680px] lg:w-[720px] xl:w-[750px] min-h-[440px] md:h-[460px] lg:h-[480px] snap-center bg-[#0F111A] border border-[#D9A15C]/15 rounded-[1.75rem] p-7 md:p-10 lg:p-12 flex flex-col justify-between hover:border-[#D9A15C]/50 transition-all duration-300 ease-out md:hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(217,161,92,0.12)] shadow-xl cursor-default relative overflow-hidden backdrop-blur-sm"
           >
             <div>
-              {/* Card Header: Category Tag & Index Counter */}
-              <div className="flex items-center justify-between mb-5">
-                <span className="px-3 py-1 rounded-full bg-[#D9A15C]/10 border border-[#D9A15C]/20 text-[#D9A15C] font-medium tracking-[0.12em] uppercase text-[0.7rem] md:text-xs transition-transform duration-300 group-hover:translate-x-1">
+              {/* Card Header: Category Tag & Large Index Counter */}
+              <div className="flex items-center justify-between mb-5 md:mb-6">
+                <span className="px-3.5 py-1.5 rounded-full bg-[#D9A15C]/10 border border-[#D9A15C]/20 text-[#D9A15C] font-medium tracking-[0.12em] uppercase text-[0.7rem] md:text-xs transition-transform duration-300 group-hover:translate-x-1">
                   {project.category}
                 </span>
-                <span className="text-xl md:text-2xl font-heading font-black text-white/20 group-hover:text-[#D9A15C]/70 transition-colors duration-300">
+                <span className="text-xl md:text-3xl font-heading font-black text-white/20 group-hover:text-[#D9A15C]/70 transition-colors duration-300">
                   0{idx + 1}
                 </span>
               </div>
 
               {/* Title */}
-              <h3 className="glitch-hover text-2xl md:text-3xl font-bold font-heading text-[#EDEDF2] mb-4 tracking-[-0.02em] leading-tight transition-transform duration-300 group-hover:translate-x-1 group-hover:text-white">
+              <h3 className="glitch-hover text-2xl md:text-3xl lg:text-4xl font-bold font-heading text-[#EDEDF2] mb-4 md:mb-5 tracking-[-0.02em] leading-tight transition-transform duration-300 group-hover:translate-x-1 group-hover:text-white">
                 {project.title}
               </h3>
 
               {/* Description */}
-              <p className="text-[#9A9AA5] text-sm md:text-base leading-[1.7] font-light">
+              <p className="text-[#9A9AA5] text-sm md:text-base lg:text-[1.05rem] leading-[1.75] font-light max-w-2xl">
                 {project.description}
               </p>
             </div>
 
             {/* Action Button */}
-            <div className="mt-6 transition-transform duration-300 group-hover:translate-y-[-2px]">
+            <div className="mt-6 md:mt-8 transition-transform duration-300 group-hover:translate-y-[-2px]">
               {project.link ? (
                 <AnimatedButton
                   href={project.link}
