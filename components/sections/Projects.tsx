@@ -188,9 +188,12 @@ export default function Projects() {
       <div className="w-full max-w-7xl mx-auto px-6 lg:px-8 pt-32 pb-16 md:pt-40 md:pb-24 text-center md:text-left">
         <h2
           ref={headingRef}
-          className="projects-heading glitch-hover text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] tracking-[-0.05em] leading-[0.9]"
+          className="projects-heading group text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] tracking-[-0.05em] leading-[0.9] cursor-pointer"
         >
-          Selected<br className="hidden md:block" /> Works<span className="text-[#D9A15C]">.</span>
+          <span className="spider-glitch block" data-text="Selected">Selected</span>
+          <span className="spider-glitch block" data-text="Works.">
+            Works<span className="text-[#D9A15C]">.</span>
+          </span>
         </h2>
         <p className="mt-6 text-xs md:text-sm text-[#9A9AA5] tracking-widest uppercase font-mono">
           Scroll down to explore projects →
@@ -245,7 +248,10 @@ export default function Projects() {
                 </div>
 
                 {/* Title */}
-                <h3 className="glitch-hover text-2xl md:text-3xl font-bold font-heading text-[#EDEDF2] mb-3 md:mb-4 tracking-[-0.02em] leading-tight transition-transform duration-300 group-hover:translate-x-1 group-hover:text-white">
+                <h3 
+                  className="spider-glitch text-2xl md:text-3xl font-bold font-heading text-[#EDEDF2] mb-3 md:mb-4 tracking-[-0.02em] leading-tight transition-transform duration-300 group-hover:translate-x-1 group-hover:text-white"
+                  data-text={project.title}
+                >
                   {project.title}
                 </h3>
 
@@ -298,7 +304,10 @@ export default function Projects() {
               </div>
 
               {/* Title */}
-              <h3 className="glitch-hover text-2xl md:text-3xl font-bold font-heading text-[#EDEDF2] mb-3 md:mb-4 tracking-[-0.02em] leading-tight transition-transform duration-300 group-hover:translate-x-1 group-hover:text-white">
+              <h3 
+                className="spider-glitch text-2xl md:text-3xl font-bold font-heading text-[#EDEDF2] mb-3 md:mb-4 tracking-[-0.02em] leading-tight transition-transform duration-300 group-hover:translate-x-1 group-hover:text-white"
+                data-text="More on GitHub"
+              >
                 More on GitHub
               </h3>
 

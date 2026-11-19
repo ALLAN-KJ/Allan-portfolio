@@ -118,7 +118,10 @@ export default function Experience() {
   return (
     <section id="experience" ref={containerRef} className="py-48 w-full bg-[#0A0B0F] relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-6 relative z-10">
-        <h2 className="experience-heading glitch-hover text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] mb-20 tracking-[-0.05em] leading-[0.9]">
+        <h2 
+          className="experience-heading spider-glitch text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] mb-20 tracking-[-0.05em] leading-[0.9]"
+          data-text="Experience."
+        >
           Experience<span className="text-[#D9A15C]">.</span>
         </h2>
 
@@ -137,7 +140,12 @@ export default function Experience() {
                 <p className="text-[#D9A15C] font-medium tracking-[0.12em] uppercase text-[0.65rem] mb-5">
                   {exp.date} &bull; {exp.location}
                 </p>
-                <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#EDEDF2] mb-3 tracking-[-0.02em]">{exp.company}</h3>
+                <h3 
+                  className="spider-glitch text-3xl md:text-4xl font-bold font-heading text-[#EDEDF2] mb-3 tracking-[-0.02em]"
+                  data-text={exp.company}
+                >
+                  {exp.company}
+                </h3>
                 <p className="text-[#EDEDF2] text-lg font-medium leading-[1.7] mb-4">{exp.role}</p>
                 {exp.description && (
                   <p className="text-[#9A9AA5] text-sm md:text-base font-light leading-[1.7]">{exp.description}</p>

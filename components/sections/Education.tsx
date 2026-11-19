@@ -104,7 +104,10 @@ export default function Education() {
   return (
     <section id="education" ref={containerRef} className="py-48 w-full bg-[#0C0D12] relative overflow-hidden border-t border-white/5">
       <div className="max-w-6xl mx-auto px-6 relative z-10">
-        <h2 className="education-heading glitch-hover text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] mb-20 tracking-[-0.05em] leading-[0.9]">
+        <h2 
+          className="education-heading spider-glitch text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] mb-20 tracking-[-0.05em] leading-[0.9]"
+          data-text="Education."
+        >
           Education<span className="text-[#D9A15C]">.</span>
         </h2>
 
@@ -123,7 +126,12 @@ export default function Education() {
                 <p className="text-[#D9A15C] font-medium tracking-[0.12em] uppercase text-[0.65rem] mb-5">
                   {edu.location}
                 </p>
-                <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#EDEDF2] mb-3 tracking-[-0.02em]">{edu.institution}</h3>
+                <h3 
+                  className="spider-glitch text-3xl md:text-4xl font-bold font-heading text-[#EDEDF2] mb-3 tracking-[-0.02em]"
+                  data-text={edu.institution}
+                >
+                  {edu.institution}
+                </h3>
                 <p className="text-[#EDEDF2] text-xl font-medium leading-[1.7] mb-2">{edu.degree}</p>
                 <p className="text-[#9A9AA5] text-base font-light leading-[1.7] mb-2">{edu.specialization}</p>
                 <p className="text-[#D9A15C]/80 text-sm font-medium tracking-wide">{edu.cgpa}</p>

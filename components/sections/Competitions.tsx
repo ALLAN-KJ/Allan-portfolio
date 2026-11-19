@@ -106,7 +106,10 @@ export default function Competitions() {
   return (
     <section id="competitions" ref={containerRef} className="py-32 w-full bg-[#0A0B0F] overflow-hidden relative">
       <div className="max-w-6xl mx-auto px-6">
-        <h2 className="competitions-heading glitch-hover text-[clamp(2.5rem,8vw,5rem)] font-black font-heading text-[#EDEDF2] mb-20 text-center tracking-[-0.03em] leading-[0.92]">
+        <h2 
+          className="competitions-heading spider-glitch text-[clamp(2.5rem,8vw,5rem)] font-black font-heading text-[#EDEDF2] mb-20 text-center tracking-[-0.03em] leading-[0.92]"
+          data-text="Competitions."
+        >
           Competitions<span className="text-[#D9A15C]">.</span>
         </h2>
 
@@ -129,7 +132,10 @@ export default function Competitions() {
                 <p className="text-[#D9A15C] font-medium tracking-[0.12em] uppercase text-[0.65rem] mb-4">
                   {comp.date}
                 </p>
-                <h3 className="text-3xl md:text-4xl font-bold font-heading text-[#EDEDF2] mb-7 tracking-[-0.02em]">
+                <h3 
+                  className="spider-glitch text-3xl md:text-4xl font-bold font-heading text-[#EDEDF2] mb-7 tracking-[-0.02em]"
+                  data-text={comp.title}
+                >
                   {comp.title}
                 </h3>
                 <div className="flex flex-wrap gap-3">

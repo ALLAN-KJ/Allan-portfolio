@@ -87,7 +87,10 @@ export default function Skills() {
   return (
     <section id="skills" ref={containerRef} className="py-48 w-full bg-[#0C0D12] border-t border-white/5 relative">
       <div className="max-w-6xl mx-auto px-6">
-        <h2 className="skills-heading glitch-hover text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] mb-20 text-center tracking-[-0.05em] leading-[0.9]">
+        <h2 
+          className="skills-heading spider-glitch text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] mb-20 text-center tracking-[-0.05em] leading-[0.9]"
+          data-text="Skills."
+        >
           Skills<span className="text-[#D9A15C]">.</span>
         </h2>
 
@@ -104,7 +107,7 @@ export default function Skills() {
                 <span className="w-5 h-5 rounded-full border border-[#D9A15C]/40 flex items-center justify-center group-hover:border-[#D9A15C]/80 transition-colors">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#D9A15C]/60 group-hover:bg-[#D9A15C] transition-colors" />
                 </span>
-                {category.title}
+                <span className="spider-glitch" data-text={category.title}>{category.title}</span>
               </h3>
               <ul className="space-y-3">
                 {category.skills.map((skill, sIdx) => (

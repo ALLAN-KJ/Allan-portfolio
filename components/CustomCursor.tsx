@@ -46,7 +46,7 @@ export default function CustomCursor() {
 
     window.addEventListener("mousemove", moveCursor);
 
-    const interactiveSelectors = "a, button, [role='button'], input, select, textarea, .interactive-3d, .glitch-hover";
+    const interactiveSelectors = "a, button, [role='button'], input, select, textarea, .interactive-3d, .glitch-hover, .spider-glitch";
     
     // We use event delegation on document body to handle dynamically added elements
     const handleMouseOver = (e: MouseEvent) => {

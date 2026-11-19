@@ -83,7 +83,10 @@ export default function Home() {
               ref={heroContentRef}
               className="flex flex-col items-center md:items-start justify-center w-full md:w-1/2 opacity-0 translate-y-8 pointer-events-none relative z-10"
             >
-              <h1 className="text-5xl font-black font-heading tracking-[-0.04em] text-[#EDEDF2] md:text-7xl xl:text-8xl 2xl:text-9xl drop-shadow-[0_0_20px_rgba(217,161,92,0.15)] pointer-events-auto leading-[0.95] whitespace-nowrap">
+              <h1 
+                className="spider-glitch text-5xl font-black font-heading tracking-[-0.04em] text-[#EDEDF2] md:text-7xl xl:text-8xl 2xl:text-9xl drop-shadow-[0_0_20px_rgba(217,161,92,0.15)] pointer-events-auto leading-[0.95] whitespace-nowrap cursor-pointer"
+                data-text="Allan K J"
+              >
                 Allan K J
               </h1>
               <p className="mt-6 md:mt-8 max-w-xl text-base md:text-lg text-[#9A9AA5] leading-[1.7] font-light pointer-events-auto">
