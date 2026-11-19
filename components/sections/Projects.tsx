@@ -7,6 +7,7 @@ import AnimatedButton from "../AnimatedButton";
 
 export default function Projects() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const pinWrapperRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
@@ -15,10 +16,11 @@ export default function Projects() {
     gsap.registerPlugin(ScrollTrigger);
 
     const container = containerRef.current;
+    const pinWrapper = pinWrapperRef.current;
     const track = trackRef.current;
     const heading = headingRef.current;
 
-    if (!container || !track) return;
+    if (!container || !pinWrapper || !track) return;
 
     const mm = gsap.matchMedia();
 
@@ -26,14 +28,14 @@ export default function Projects() {
     if (heading) {
       gsap.fromTo(
         heading,
-        { y: 30, opacity: 0 },
+        { y: 40, opacity: 0 },
         {
           y: 0,
           opacity: 1,
-          duration: 0.8,
+          duration: 0.9,
           ease: "power3.out",
           scrollTrigger: {
-            trigger: container,
+            trigger: heading,
             start: "top 85%",
             toggleActions: "play none none reverse",
           },
@@ -41,25 +43,22 @@ export default function Projects() {
       );
     }
 
-    // Desktop & Tablet (>= 768px): Pinned Horizontal Scrub
+    // Desktop & Tablet (>= 768px): Pinned Horizontal Scrub with 1:1 Lenis Harmony
     mm.add("(min-width: 768px)", () => {
       const getScrollAmount = () => {
-        return track.scrollWidth - window.innerWidth + 140; // 140px buffer
+        return track.scrollWidth - window.innerWidth + 140; // 140px end buffer
       };
 
-      const getScrollDistance = () => {
-        return getScrollAmount() * 1.25;
-      };
-
+      // scrub: 0.5 creates buttery-smooth synchronization with Lenis without double-lag
       const horizontalScroll = gsap.to(track, {
         x: () => -getScrollAmount(),
         ease: "none",
         scrollTrigger: {
-          trigger: container,
+          trigger: pinWrapper,
           start: "top top",
-          end: () => `+=${getScrollDistance()}`,
+          end: () => `+=${getScrollAmount() * 1.15}`,
           pin: true,
-          scrub: 1.1,
+          scrub: 0.5,
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
@@ -149,92 +148,94 @@ export default function Projects() {
     <section
       id="projects"
       ref={containerRef}
-      className="w-full relative bg-[#0C0D12] z-[30] overflow-hidden py-20 md:py-0 md:min-h-screen md:h-screen md:flex md:flex-col md:justify-center"
+      className="w-full relative bg-[#0C0D12] z-[30] overflow-hidden"
     >
-      {/* Top Section Header: Pinned separately above the cards */}
-      <div className="w-full max-w-7xl mx-auto px-6 md:px-16 lg:px-24 mb-6 md:mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <div className="text-[#D9A15C] font-mono tracking-[0.2em] uppercase text-xs mb-2">
-            Featured Portfolio
-          </div>
-          <h2
-            ref={headingRef}
-            className="projects-heading text-[clamp(2.5rem,6vw,4.5rem)] md:text-[4rem] lg:text-[5rem] font-black font-heading text-[#EDEDF2] tracking-[-0.05em] leading-[0.9] whitespace-nowrap"
-          >
-            Selected Works<span className="text-[#D9A15C]">.</span>
-          </h2>
-          <p className="mt-2 text-xs md:text-sm text-[#9A9AA5] tracking-widest uppercase font-mono hidden md:block">
-            Scroll down to explore horizontally →
-          </p>
-          <p className="mt-2 text-xs text-[#9A9AA5] tracking-wider uppercase font-mono md:hidden">
-            Swipe sideways to explore →
-          </p>
-        </div>
-
-        {/* Desktop Progress Bar & Counter */}
-        <div className="hidden md:flex items-center gap-4 mb-2">
-          <span className="text-xs font-mono text-[#D9A15C]/80 tracking-widest uppercase">
-            01 — 05
-          </span>
-          <div className="w-36 h-[2px] bg-white/10 rounded-full overflow-hidden">
-            <div
-              ref={progressBarRef}
-              className="w-full h-full bg-[#D9A15C] origin-left transform scale-x-0 transition-transform duration-75"
-            />
-          </div>
-        </div>
+      {/* 1. Giant Headline Section: At the top separately, exactly like yesterday */}
+      <div className="w-full max-w-7xl mx-auto px-6 lg:px-8 pt-32 pb-16 md:pt-40 md:pb-24 text-center md:text-left">
+        <h2
+          ref={headingRef}
+          className="projects-heading text-[clamp(4rem,10vw,8rem)] md:text-[9rem] lg:text-[12rem] font-black font-heading text-[#EDEDF2] tracking-[-0.05em] leading-[0.9]"
+        >
+          Selected<br className="hidden md:block" /> Works<span className="text-[#D9A15C]">.</span>
+        </h2>
+        <p className="mt-6 text-xs md:text-sm text-[#9A9AA5] tracking-widest uppercase font-mono">
+          Scroll down to explore projects →
+        </p>
       </div>
 
-      {/* Horizontal Track: Project cards only with +50% breadth (~720px width) */}
+      {/* 2. Pinned Horizontal Track: Viewport-height showcase (Headline is above and not visible while scrubbing) */}
       <div
-        ref={trackRef}
-        className="flex items-center gap-8 md:gap-10 lg:gap-12 px-6 md:px-16 lg:px-24 w-full md:w-max overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none scrollbar-none pb-6 md:pb-0"
+        ref={pinWrapperRef}
+        className="w-full md:h-screen md:min-h-screen flex flex-col justify-center relative overflow-hidden pb-24 md:pb-0"
       >
-        {projects.map((project, idx) => (
-          <div
-            key={idx}
-            className="project-card group flex-shrink-0 w-[88vw] max-w-[380px] md:w-[680px] lg:w-[720px] xl:w-[750px] min-h-[440px] md:h-[460px] lg:h-[480px] snap-center bg-[#0F111A] border border-[#D9A15C]/15 rounded-[1.75rem] p-7 md:p-10 lg:p-12 flex flex-col justify-between hover:border-[#D9A15C]/50 transition-all duration-300 ease-out md:hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(217,161,92,0.12)] shadow-xl cursor-default relative overflow-hidden backdrop-blur-sm"
-          >
-            <div>
-              {/* Card Header: Category Tag & Large Index Counter */}
-              <div className="flex items-center justify-between mb-5 md:mb-6">
-                <span className="px-3.5 py-1.5 rounded-full bg-[#D9A15C]/10 border border-[#D9A15C]/20 text-[#D9A15C] font-medium tracking-[0.12em] uppercase text-[0.7rem] md:text-xs transition-transform duration-300 group-hover:translate-x-1">
-                  {project.category}
-                </span>
-                <span className="text-xl md:text-3xl font-heading font-black text-white/20 group-hover:text-[#D9A15C]/70 transition-colors duration-300">
-                  0{idx + 1}
-                </span>
-              </div>
-
-              {/* Title */}
-              <h3 className="glitch-hover text-2xl md:text-3xl lg:text-4xl font-bold font-heading text-[#EDEDF2] mb-4 md:mb-5 tracking-[-0.02em] leading-tight transition-transform duration-300 group-hover:translate-x-1 group-hover:text-white">
-                {project.title}
-              </h3>
-
-              {/* Description */}
-              <p className="text-[#9A9AA5] text-sm md:text-base lg:text-[1.05rem] leading-[1.75] font-light max-w-2xl">
-                {project.description}
-              </p>
-            </div>
-
-            {/* Action Button */}
-            <div className="mt-6 md:mt-8 transition-transform duration-300 group-hover:translate-y-[-2px]">
-              {project.link ? (
-                <AnimatedButton
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {project.buttonText}
-                </AnimatedButton>
-              ) : (
-                <div className="px-5 py-2.5 rounded-full border border-white/10 text-[#9A9AA5] inline-flex items-center text-xs md:text-sm font-medium cursor-not-allowed uppercase tracking-[0.12em] min-h-[40px]">
-                  {project.buttonText}
-                </div>
-              )}
+        {/* Desktop Top Status & Progress Bar (Visible while scrolling cards) */}
+        <div className="hidden md:flex absolute top-20 lg:top-24 left-12 right-12 lg:left-24 lg:right-24 z-40 items-center justify-between text-xs font-mono tracking-widest text-[#9A9AA5]/70 uppercase select-none pointer-events-none">
+          <span className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#D9A15C] animate-pulse" />
+            Projects Showcase
+          </span>
+          <div className="flex items-center gap-4">
+            <span className="text-[#D9A15C]/80">01 — 05</span>
+            <div className="w-36 h-[2px] bg-white/10 rounded-full overflow-hidden">
+              <div
+                ref={progressBarRef}
+                className="w-full h-full bg-[#D9A15C] origin-left transform scale-x-0 transition-transform duration-75"
+              />
             </div>
           </div>
-        ))}
+        </div>
+
+        {/* Horizontal Track: Spacious Widescreen Cards (+50% breadth: ~720px) */}
+        <div
+          ref={trackRef}
+          className="flex items-center gap-8 md:gap-12 lg:gap-14 px-6 md:px-16 lg:px-24 w-full md:w-max overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none scrollbar-none pb-6 md:pb-0"
+        >
+          {projects.map((project, idx) => (
+            <div
+              key={idx}
+              className="project-card group flex-shrink-0 w-[88vw] max-w-[380px] md:w-[680px] lg:w-[720px] xl:w-[760px] min-h-[440px] md:h-[480px] lg:h-[510px] snap-center bg-[#0F111A] border border-[#D9A15C]/15 rounded-[2rem] p-7 md:p-12 lg:p-14 flex flex-col justify-between hover:border-[#D9A15C]/50 transition-all duration-300 ease-out md:hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(217,161,92,0.12)] shadow-xl cursor-default relative overflow-hidden backdrop-blur-sm"
+            >
+              <div>
+                {/* Card Header: Category Tag & Large Index Counter */}
+                <div className="flex items-center justify-between mb-6 md:mb-8">
+                  <span className="px-3.5 py-1.5 rounded-full bg-[#D9A15C]/10 border border-[#D9A15C]/20 text-[#D9A15C] font-medium tracking-[0.12em] uppercase text-[0.7rem] md:text-xs transition-transform duration-300 group-hover:translate-x-1">
+                    {project.category}
+                  </span>
+                  <span className="text-2xl md:text-4xl font-heading font-black text-white/20 group-hover:text-[#D9A15C]/70 transition-colors duration-300">
+                    0{idx + 1}
+                  </span>
+                </div>
+
+                {/* Title */}
+                <h3 className="glitch-hover text-2xl md:text-3xl lg:text-4xl font-bold font-heading text-[#EDEDF2] mb-4 md:mb-5 tracking-[-0.02em] leading-tight transition-transform duration-300 group-hover:translate-x-1 group-hover:text-white">
+                  {project.title}
+                </h3>
+
+                {/* Description */}
+                <p className="text-[#9A9AA5] text-sm md:text-base lg:text-[1.05rem] leading-[1.75] font-light max-w-2xl">
+                  {project.description}
+                </p>
+              </div>
+
+              {/* Action Button */}
+              <div className="mt-8 transition-transform duration-300 group-hover:translate-y-[-2px]">
+                {project.link ? (
+                  <AnimatedButton
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {project.buttonText}
+                  </AnimatedButton>
+                ) : (
+                  <div className="px-5 py-2.5 rounded-full border border-white/10 text-[#9A9AA5] inline-flex items-center text-xs md:text-sm font-medium cursor-not-allowed uppercase tracking-[0.12em] min-h-[40px]">
+                    {project.buttonText}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
