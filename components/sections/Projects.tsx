@@ -185,40 +185,40 @@ export default function Projects() {
           </div>
         </div>
 
-        {/* Horizontal Track: Spacious Widescreen Cards (+50% breadth: ~720px) */}
+        {/* Horizontal Track: Vertical Showcase Cards matching requested size (~400px–420px) */}
         <div
           ref={trackRef}
-          className="flex items-center gap-8 md:gap-12 lg:gap-14 px-6 md:px-16 lg:px-24 w-full md:w-max overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none scrollbar-none pb-6 md:pb-0"
+          className="flex items-center gap-6 md:gap-8 lg:gap-10 px-6 md:px-16 lg:px-24 w-full md:w-max overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none scrollbar-none pb-6 md:pb-0"
         >
           {projects.map((project, idx) => (
             <div
               key={idx}
-              className="project-card group flex-shrink-0 w-[88vw] max-w-[380px] md:w-[680px] lg:w-[720px] xl:w-[760px] min-h-[440px] md:h-[480px] lg:h-[510px] snap-center bg-[#0F111A] border border-[#D9A15C]/15 rounded-[2rem] p-7 md:p-12 lg:p-14 flex flex-col justify-between hover:border-[#D9A15C]/50 transition-all duration-300 ease-out md:hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(217,161,92,0.12)] shadow-xl cursor-default relative overflow-hidden backdrop-blur-sm"
+              className="project-card group flex-shrink-0 w-[85vw] max-w-[360px] md:w-[400px] xl:w-[420px] min-h-[460px] md:h-[480px] lg:h-[500px] snap-center bg-[#0F111A] border border-[#D9A15C]/15 rounded-[1.75rem] p-7 md:p-8 lg:p-9 flex flex-col justify-between hover:border-[#D9A15C]/50 transition-all duration-300 ease-out md:hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(217,161,92,0.12)] shadow-xl cursor-default relative overflow-hidden backdrop-blur-sm"
             >
               <div>
                 {/* Card Header: Category Tag & Large Index Counter */}
-                <div className="flex items-center justify-between mb-6 md:mb-8">
-                  <span className="px-3.5 py-1.5 rounded-full bg-[#D9A15C]/10 border border-[#D9A15C]/20 text-[#D9A15C] font-medium tracking-[0.12em] uppercase text-[0.7rem] md:text-xs transition-transform duration-300 group-hover:translate-x-1">
+                <div className="flex items-start justify-between gap-3 mb-5 md:mb-6">
+                  <span className="px-3 py-1 rounded-full bg-[#D9A15C]/10 border border-[#D9A15C]/20 text-[#D9A15C] font-medium tracking-[0.1em] uppercase text-[0.65rem] md:text-[0.7rem] transition-transform duration-300 group-hover:translate-x-1">
                     {project.category}
                   </span>
-                  <span className="text-2xl md:text-4xl font-heading font-black text-white/20 group-hover:text-[#D9A15C]/70 transition-colors duration-300">
+                  <span className="text-xl md:text-2xl font-heading font-black text-white/20 group-hover:text-[#D9A15C]/70 transition-colors duration-300 flex-shrink-0">
                     0{idx + 1}
                   </span>
                 </div>
 
                 {/* Title */}
-                <h3 className="glitch-hover text-2xl md:text-3xl lg:text-4xl font-bold font-heading text-[#EDEDF2] mb-4 md:mb-5 tracking-[-0.02em] leading-tight transition-transform duration-300 group-hover:translate-x-1 group-hover:text-white">
+                <h3 className="glitch-hover text-2xl md:text-3xl font-bold font-heading text-[#EDEDF2] mb-3 md:mb-4 tracking-[-0.02em] leading-tight transition-transform duration-300 group-hover:translate-x-1 group-hover:text-white">
                   {project.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-[#9A9AA5] text-sm md:text-base lg:text-[1.05rem] leading-[1.75] font-light max-w-2xl">
+                <p className="text-[#9A9AA5] text-sm leading-[1.7] font-light">
                   {project.description}
                 </p>
               </div>
 
               {/* Action Button */}
-              <div className="mt-8 transition-transform duration-300 group-hover:translate-y-[-2px]">
+              <div className="mt-6 md:mt-8 transition-transform duration-300 group-hover:translate-y-[-2px]">
                 {project.link ? (
                   <AnimatedButton
                     href={project.link}
