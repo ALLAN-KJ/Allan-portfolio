@@ -193,7 +193,7 @@ export default function Projects() {
           {projects.map((project, idx) => (
             <div
               key={idx}
-              className="project-card group flex-shrink-0 w-[85vw] max-w-[360px] md:w-[400px] xl:w-[420px] min-h-[460px] md:h-[480px] lg:h-[500px] snap-center bg-[#0F111A] border border-[#D9A15C]/15 rounded-[1.75rem] p-7 md:p-8 lg:p-9 flex flex-col justify-between hover:border-[#D9A15C]/50 transition-all duration-300 ease-out md:hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(217,161,92,0.12)] shadow-xl cursor-default relative overflow-hidden backdrop-blur-sm"
+              className="project-card group flex-shrink-0 w-[85vw] max-md:max-w-[360px] md:w-[440px] lg:w-[460px] xl:w-[480px] md:max-w-none min-h-[460px] md:h-[480px] lg:h-[500px] snap-center bg-[#0F111A] border border-[#D9A15C]/15 rounded-[1.75rem] p-7 md:p-8 lg:p-9 flex flex-col justify-between hover:border-[#D9A15C]/50 transition-all duration-300 ease-out md:hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(217,161,92,0.12)] shadow-xl cursor-default relative overflow-hidden backdrop-blur-sm"
             >
               <div>
                 {/* Card Header: Category Tag & Large Index Counter */}
