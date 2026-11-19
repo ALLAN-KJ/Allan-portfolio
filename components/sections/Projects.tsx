@@ -45,8 +45,15 @@ export default function Projects() {
 
     // Desktop & Tablet (>= 768px): Pinned Horizontal Scrub with 1:1 Lenis Harmony
     mm.add("(min-width: 768px)", () => {
+      // Calculate exact distance to glide Card 05 all the way across to the far left margin
       const getScrollAmount = () => {
-        return track.scrollWidth - window.innerWidth + 140; // 140px end buffer
+        const cards = track.querySelectorAll(".project-card");
+        if (cards.length > 0) {
+          const lastCard = cards[cards.length - 1] as HTMLElement;
+          const firstCard = cards[0] as HTMLElement;
+          return lastCard.offsetLeft - firstCard.offsetLeft;
+        }
+        return track.scrollWidth - window.innerWidth + 140;
       };
 
       // scrub: 0.5 creates buttery-smooth synchronization with Lenis without double-lag
