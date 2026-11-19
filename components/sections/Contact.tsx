@@ -15,7 +15,7 @@ export default function Contact() {
 
     if (!containerRef.current || !bgRef.current) return;
 
-    let mm = gsap.matchMedia();
+    const mm = gsap.matchMedia();
 
     // Desktop parallax only
     mm.add("(min-width: 768px)", () => {

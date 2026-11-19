@@ -350,7 +350,7 @@ function SceneContent() {
       });
 
       // 3. Scroll-Driven Transform tied perfectly to #hero section
-      let mm = gsap.matchMedia();
+      const mm = gsap.matchMedia();
 
       mm.add({
         isDesktop: "(min-width: 768px)",

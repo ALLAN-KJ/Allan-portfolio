@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Sparkles, Stars, Environment } from "@react-three/drei";
+import { Sparkles, Stars } from "@react-three/drei";
 import { useRef } from "react";
 import * as THREE from "three";
 

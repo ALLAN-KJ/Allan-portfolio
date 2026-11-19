@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import gsap from 'gsap';
 import styles from '@/app/nexus/nexus.module.css';
 import { DashboardContent, ProfileContent, ChatContent, SettingsContent } from './PageContent';
@@ -39,7 +39,7 @@ export default function Book() {
         const data = await res.json();
         setErrorMsg(data.error || 'Access Denied.');
       }
-    } catch (err) {
+    } catch {
       setErrorMsg('Connection Error.');
     } finally {
       setIsUnlocking(false);
