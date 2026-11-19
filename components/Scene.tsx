@@ -52,8 +52,9 @@ const RippleShaderMaterial = shaderMaterial(
 extend({ RippleShaderMaterial });
 
 function IDCard({ isMobile = false }: { isMobile?: boolean }) {
-  const photoTexture = useTexture("/images/allan_coat.png");
-  const photoTextureBw = useTexture("/images/allan_coatbw.png");
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || (process.env.NODE_ENV === "production" ? "/Allan-portfolio" : "");
+  const photoTexture = useTexture(`${basePath}/images/allan_coat.png`);
+  const photoTextureBw = useTexture(`${basePath}/images/allan_coatbw.png`);
   const [hovered, setHovered] = useState(false);
   const materialRef = useRef<any>(null);
 
