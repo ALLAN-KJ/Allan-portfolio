@@ -49,87 +49,60 @@ export default function Projects() {
       }
     }
 
-    // Desktop & Tablet (>= 768px): Pinned Horizontal Scrub with 1:1 Lenis Harmony
-    mm.add("(min-width: 768px)", () => {
-      // Cards pop-up entrance animation
-      const cards = track.querySelectorAll(".project-card");
-      gsap.fromTo(
-        cards,
-        { y: 60, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          stagger: 0.1,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: pinWrapper,
-            start: "top 80%",
-            toggleActions: "play none none reverse",
-          },
-        }
-      );
-
-      // Stop scroll when Card 05 is at the far-left margin and the GitHub concluding card is on the right
-      const getScrollAmount = () => {
-        const cards = track.querySelectorAll(".project-card");
-        if (cards.length >= 2) {
-          const card5 = cards[cards.length - 2] as HTMLElement;
-          const firstCard = cards[0] as HTMLElement;
-          return card5.offsetLeft - firstCard.offsetLeft;
-        }
-        return track.scrollWidth - window.innerWidth + 140;
-      };
-
-      // scrub: 0.5 creates buttery-smooth synchronization with Lenis without double-lag
-      const horizontalScroll = gsap.to(track, {
-        x: () => -getScrollAmount(),
-        ease: "none",
+    // Universal (Desktop, Tablet & Mobile): Pinned Horizontal Scrub with 1:1 Lenis Harmony
+    const cards = track.querySelectorAll(".project-card");
+    gsap.fromTo(
+      cards,
+      { y: 50, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        stagger: 0.08,
+        duration: 0.8,
+        ease: "power3.out",
         scrollTrigger: {
           trigger: pinWrapper,
-          start: "top top",
-          end: () => `+=${getScrollAmount() * 1.15}`,
-          pin: true,
-          scrub: 0.5,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            if (progressBarRef.current) {
-              progressBarRef.current.style.transform = `scaleX(${self.progress})`;
-            }
-          },
+          start: "top 80%",
+          toggleActions: "play none none reverse",
         },
-      });
+      }
+    );
 
-      return () => {
-        horizontalScroll.kill();
-      };
-    });
+    // Calculate exact scroll distance so last card rests comfortably inside the right margin on any screen
+    const getScrollAmount = () => {
+      const cards = track.querySelectorAll(".project-card");
+      if (cards.length > 0) {
+        const lastCard = cards[cards.length - 1] as HTMLElement;
+        const firstCard = cards[0] as HTMLElement;
+        const totalDistance = (lastCard.offsetLeft + lastCard.offsetWidth) - firstCard.offsetLeft;
+        const endPadding = window.innerWidth < 768 ? 24 : 80;
+        return Math.max(0, totalDistance - window.innerWidth + endPadding + firstCard.offsetLeft);
+      }
+      return Math.max(0, track.scrollWidth - window.innerWidth + 40);
+    };
 
-    // Mobile (< 768px): Card entrance animations
-    mm.add("(max-width: 767px)", () => {
-      const cards = gsap.utils.toArray(".project-card") as HTMLElement[];
-      cards.forEach((card) => {
-        gsap.fromTo(
-          card,
-          { y: 30, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            ease: "power3.out",
-            duration: 0.6,
-            scrollTrigger: {
-              trigger: card,
-              start: "top 90%",
-              toggleActions: "play none none reverse",
-            },
+    // scrub: 0.5 creates buttery-smooth synchronization with Lenis without double-lag
+    const horizontalScroll = gsap.to(track, {
+      x: () => -getScrollAmount(),
+      ease: "none",
+      scrollTrigger: {
+        trigger: pinWrapper,
+        start: "top top",
+        end: () => `+=${Math.max(window.innerHeight * 1.3, getScrollAmount() * 1.15)}`,
+        pin: true,
+        scrub: 0.5,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          if (progressBarRef.current) {
+            progressBarRef.current.style.transform = `scaleX(${self.progress})`;
           }
-        );
-      });
+        },
+      },
     });
 
     return () => {
-      mm.revert();
+      horizontalScroll.kill();
       headingSplit?.revert();
     };
   }, []);
@@ -199,20 +172,20 @@ export default function Projects() {
         </p>
       </div>
 
-      {/* 2. Pinned Horizontal Track: Viewport-height showcase (Headline is above and not visible while scrubbing) */}
+      {/* 2. Pinned Horizontal Track: Viewport-height showcase on all devices */}
       <div
         ref={pinWrapperRef}
-        className="w-full md:h-screen md:min-h-screen flex flex-col justify-center relative overflow-hidden pb-24 md:pb-0"
+        className="w-full h-screen min-h-screen flex flex-col justify-center relative overflow-hidden"
       >
-        {/* Desktop Top Status & Progress Bar (Visible while scrolling cards) */}
-        <div className="hidden md:flex absolute top-20 lg:top-24 left-12 right-12 lg:left-24 lg:right-24 z-40 items-center justify-between text-xs font-mono tracking-widest text-[#9A9AA5]/70 uppercase select-none pointer-events-none">
+        {/* Top Status & Progress Bar (Visible on mobile & desktop) */}
+        <div className="flex absolute top-14 md:top-20 lg:top-24 left-6 md:left-12 right-6 md:right-12 lg:left-24 lg:right-24 z-40 items-center justify-between text-[0.65rem] md:text-xs font-mono tracking-widest text-[#9A9AA5]/70 uppercase select-none pointer-events-none">
           <span className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-[#D9A15C] animate-pulse" />
             Projects Showcase
           </span>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 md:gap-4">
             <span className="text-[#D9A15C]/80">01 — 05 + More</span>
-            <div className="w-36 h-[2px] bg-white/10 rounded-full overflow-hidden">
+            <div className="w-24 md:w-36 h-[2px] bg-white/10 rounded-full overflow-hidden">
               <div
                 ref={progressBarRef}
                 className="w-full h-full bg-[#D9A15C] origin-left transform scale-x-0 transition-transform duration-75"
@@ -221,19 +194,19 @@ export default function Projects() {
           </div>
         </div>
 
-        {/* Horizontal Track: Vertical Showcase Cards matching requested size (~400px–420px) */}
+        {/* Horizontal Track: Seamless horizontal glide across all cards */}
         <div
           ref={trackRef}
           style={{
             paddingLeft: "max(1.5rem, calc((100vw - 80rem) / 2 + 2rem))",
             paddingRight: "max(1.5rem, calc((100vw - 80rem) / 2 + 2rem))",
           }}
-          className="gpu-accel flex items-center gap-6 md:gap-8 lg:gap-10 w-full md:w-max overflow-x-auto md:overflow-visible snap-x snap-mandatory md:snap-none scrollbar-none pb-6 md:pb-0"
+          className="gpu-accel flex items-center gap-5 md:gap-8 lg:gap-10 w-max overflow-visible select-none will-change-transform"
         >
           {projects.map((project, idx) => (
             <div
               key={idx}
-              className="project-card gpu-accel group flex-shrink-0 w-[85vw] max-md:max-w-[360px] md:w-[440px] lg:w-[460px] xl:w-[480px] md:max-w-none min-h-[460px] md:h-[480px] lg:h-[500px] snap-center bg-[#0F111A] border border-[#D9A15C]/15 rounded-[1.75rem] p-7 md:p-8 lg:p-9 flex flex-col justify-between hover:border-[#D9A15C]/50 transition-all duration-300 ease-out md:hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(217,161,92,0.12)] shadow-xl cursor-default relative overflow-hidden backdrop-blur-sm"
+              className="project-card gpu-accel group flex-shrink-0 w-[82vw] max-w-[340px] md:w-[440px] lg:w-[460px] xl:w-[480px] md:max-w-none h-[420px] max-h-[66vh] md:h-[480px] lg:h-[500px] bg-[#0F111A] border border-[#D9A15C]/15 rounded-[1.75rem] p-6 md:p-8 lg:p-9 flex flex-col justify-between hover:border-[#D9A15C]/50 transition-all duration-300 ease-out md:hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(217,161,92,0.12)] shadow-xl cursor-default relative overflow-hidden backdrop-blur-sm will-change-transform"
             >
               <div>
                 {/* Card Header: Category Tag & Large Index Counter */}
@@ -281,7 +254,7 @@ export default function Projects() {
 
           {/* Concluding Card: Explore More on GitHub & Contact */}
           <div
-            className="project-card gpu-accel group flex-shrink-0 w-[85vw] max-md:max-w-[360px] md:w-[440px] lg:w-[460px] xl:w-[480px] md:max-w-none min-h-[460px] md:h-[480px] lg:h-[500px] snap-center bg-[#0F111A] border border-[#D9A15C]/25 rounded-[1.75rem] p-7 md:p-8 lg:p-9 flex flex-col justify-between hover:border-[#D9A15C]/60 transition-all duration-300 ease-out md:hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(217,161,92,0.18)] shadow-xl cursor-default relative overflow-hidden backdrop-blur-sm"
+            className="project-card gpu-accel group flex-shrink-0 w-[82vw] max-w-[340px] md:w-[440px] lg:w-[460px] xl:w-[480px] md:max-w-none h-[420px] max-h-[66vh] md:h-[480px] lg:h-[500px] bg-[#0F111A] border border-[#D9A15C]/25 rounded-[1.75rem] p-6 md:p-8 lg:p-9 flex flex-col justify-between hover:border-[#D9A15C]/60 transition-all duration-300 ease-out md:hover:-translate-y-2 hover:shadow-[0_0_40px_rgba(217,161,92,0.18)] shadow-xl cursor-default relative overflow-hidden backdrop-blur-sm will-change-transform"
           >
             <div>
               {/* Card Header: Category Tag & GitHub SVG Link */}

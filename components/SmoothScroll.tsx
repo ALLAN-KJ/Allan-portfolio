@@ -10,13 +10,17 @@ gsap.registerPlugin(ScrollTrigger);
 export default function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
     const lenis = new Lenis({
-      lerp: 0.1, // Slightly higher for snappier response (was 0.08)
+      duration: 1.4, // Luxurious, velvety smooth deceleration curve
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential ease-out
       orientation: "vertical",
       gestureOrientation: "vertical",
       smoothWheel: true,
       syncTouch: true, // Smooth touch-based scrolling on mobile
-      wheelMultiplier: 1,
-      touchMultiplier: 2,
+      syncTouchLerp: 0.065, // Gliding momentum for phone touch gestures
+      touchInertiaExponent: 2.2, // Natural fluid inertia when finger lifts
+      wheelMultiplier: 1.1, // Effortless trackpad and mousewheel glide
+      touchMultiplier: 1.6, // Responsive yet silky mobile touch tracking
+      autoResize: true,
     });
 
     lenis.on("scroll", ScrollTrigger.update);
@@ -27,8 +31,8 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
     };
 
     gsap.ticker.add(rafHandler);
-    // Smooth out any momentary frame-rate hiccups for constant 60fps scroll
-    gsap.ticker.lagSmoothing(500, 33);
+    // lagSmoothing(0) prevents GSAP from dropping frames or causing jumpy stutters with Lenis
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
       gsap.ticker.remove(rafHandler);
